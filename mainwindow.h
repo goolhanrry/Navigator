@@ -3,7 +3,8 @@
 
 #include <QMainWindow>
 
-namespace Ui {
+namespace Ui
+{
 class MainWindow;
 }
 
@@ -11,11 +12,14 @@ class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
-public:
+  public:
     explicit MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
-private:
+  private slots:
+    void on_openFileButton_clicked();
+
+  private:
     Ui::MainWindow *ui;
 };
 

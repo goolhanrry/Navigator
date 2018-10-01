@@ -26,10 +26,12 @@ CONFIG += c++11
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    filedecoder.cpp
 
 HEADERS += \
-        mainwindow.h
+    mainwindow.h \
+    filedecoder.h
 
 FORMS += \
         mainwindow.ui
