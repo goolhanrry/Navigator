@@ -8,7 +8,7 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Navigator
+TARGET = Navigator++
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -27,11 +27,11 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    filedecoder.cpp
+        filedecoder.cpp
 
 HEADERS += \
-    mainwindow.h \
-    filedecoder.h
+        mainwindow.h \
+        filedecoder.h
 
 FORMS += \
         mainwindow.ui
