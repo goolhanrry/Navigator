@@ -28,11 +28,15 @@ CONFIG += c++11
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        filedecoder.cpp
+        filedecoder.cpp \
+    mapwidget.cpp \
+    qpolyline.cpp
 
 HEADERS += \
         mainwindow.h \
-        filedecoder.h
+        filedecoder.h \
+    mapwidget.h \
+    qpolyline.h
 
 FORMS += \
         mainwindow.ui
