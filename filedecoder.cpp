@@ -14,7 +14,7 @@ bool FileDecoder::decodeFile()
 {
     string buffer;
     stringstream stream;
-    int size;
+    int offset, size, index = 0;
     float x, y;
 
     try
@@ -22,7 +22,37 @@ bool FileDecoder::decodeFile()
         // 将文件读入内存
         ifstream fs(fileName, ios::in);
 
+        // 获取数据长度
+        fs.seekg(-57, ios::end);
+        getline(fs, buffer);
+        offset = buffer.length() ? -85 : -56;
+
+        while (true)
+        {
+            fs.seekg(offset, ios::end);
+            getline(fs, buffer);
+
+            if (buffer[10] != 'E')
+            {
+                offset -= 12;
+                break;
+            }
+
+            offset -= 57;
+        }
+
+        fs.seekg(offset, ios::end);
+        getline(fs, buffer);
+
+        stream << buffer.substr(0, 9);
+        stream >> size;
+        stream.clear();
+
+        // 初始化 QPolyline 数组
+        polyline = new QPolyline[size];
+
         // 将文件读取指针定位到线要素
+        fs.seekg(0, ios::beg);
         while (buffer != "ARC  2")
         {
             getline(fs, buffer);
@@ -32,12 +62,12 @@ bool FileDecoder::decodeFile()
         while (getline(fs, buffer))
         {
             // 读取一条折线所包含点的个数
-            stream << buffer.substr(66, 69);
+            stream << buffer.substr(66, 4);
             stream >> size;
             stream.clear();
 
-            QPolyline *newPolyline = new QPolyline(size);
-            polyline->push_back(newPolyline);
+            // 初始化 QPolyline 大小
+            polyline[index].setSize(size);
 
             // 逐行读取坐标
             for (int i = 0; i < size / 2; i++)
@@ -48,22 +78,24 @@ bool FileDecoder::decodeFile()
                 stream >> x;
                 stream.clear();
 
-                stream << buffer.substr(15, 27);
+                stream << buffer.substr(15, 13);
                 stream >> y;
                 stream.clear();
 
-                polyline->back()->addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
-                stream << buffer.substr(29, 41);
+                polyline[index].addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
+
+                stream << buffer.substr(29, 13);
                 stream >> x;
                 stream.clear();
 
-                stream << buffer.substr(43, 55);
+                stream << buffer.substr(43, 13);
                 stream >> y;
                 stream.clear();
 
-                polyline->back()->addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
+                polyline[index].addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
             }
-            if (!size % 2)
+
+            if (size % 2)
             {
                 getline(fs, buffer);
 
@@ -71,12 +103,14 @@ bool FileDecoder::decodeFile()
                 stream >> x;
                 stream.clear();
 
-                stream << buffer.substr(15, 27);
+                stream << buffer.substr(15, 13);
                 stream >> y;
                 stream.clear();
 
-                polyline->back()->addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
+                polyline[index].addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
             }
+
+            index++;
         }
 
         fs.close();

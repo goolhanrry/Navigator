@@ -22,7 +22,10 @@ void MainWindow::on_openFileButton_clicked()
     // 打开模式对话框，选择文件
     QString fileName = QFileDialog::getOpenFileName(this, "Open File", "../../../", "*.e00");
 
-    // 读取文件并解码
-    FileDecoder *fileDecoder = new FileDecoder(fileName.toStdString());
-    fileDecoder->decodeFile();
+    if (fileName.length())
+    {
+        // 读取文件并解码
+        FileDecoder *fileDecoder = new FileDecoder(fileName.toStdString());
+        fileDecoder->decodeFile();
+    }
 }

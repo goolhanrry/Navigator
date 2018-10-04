@@ -6,9 +6,10 @@
 class QPolyline
 {
   public:
-    QPolyline(int size);
+    QPolyline();
 
     void addPoint(int x, int y);
+    void setSize(int size);
 
     int size, count = 0;
     QPoint *pts;

@@ -1,6 +1,8 @@
 #include "qpolyline.h"
 
-QPolyline::QPolyline(int size)
+QPolyline::QPolyline() {}
+
+void QPolyline::setSize(int size)
 {
     this->size = size;
     pts = new QPoint[size];
