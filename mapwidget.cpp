@@ -25,7 +25,7 @@ void MapWidget::initializeGL()
 
 void MapWidget::resizeGL(int width, int height)
 {
-    glViewport(0, 0, width, height);
+    this->fixScale(this->width(), this->height());
 }
 
 void MapWidget::paintGL()
@@ -36,8 +36,18 @@ void MapWidget::paintGL()
     float dX = mX + minX;
     float dY = mY + minY;
 
+    // 绘图比例修正
+    this->fixScale(this->width(), this->height());
+
     // 清空画布
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+    // glBegin(GL_LINE_LOOP);
+    // glVertex2f(0.9f, 0.9f);
+    // glVertex2f(0.9f, -0.9f);
+    // glVertex2f(-0.9f, -0.9f);
+    // glVertex2f(-0.9f, 0.9f);
+    // glEnd();
 
     // 绘制图形
     for (int i = 0; i < size; i++)
@@ -63,4 +73,19 @@ void MapWidget::setBoundary(float maxX, float minX, float maxY, float minY)
     this->minX = minX;
     this->maxY = maxY;
     this->minY = minY;
+}
+
+void MapWidget::fixScale(int width, int height)
+{
+    float dX = maxX - minX;
+    float dY = maxY - minY;
+
+    if (dX >= dY)
+    {
+        glViewport(0.1f * width, height - 0.9f * width * dY / dX, 1.8f * width, 1.8f * width * dY / dX);
+    }
+    else
+    {
+        glViewport(width - 0.9f * height * dX / dY, 0.1f * height, 1.8f * height * dX / dY, 1.8f * height);
+    }
 }

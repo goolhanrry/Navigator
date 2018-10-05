@@ -23,6 +23,8 @@ public:
   float maxX = 1, minX = -1, maxY = 1, minY = -1;
 
 private:
+  void fixScale(int width, int height);
+
   QPolyline *polyline;
   int size;
 
