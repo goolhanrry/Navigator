@@ -26,6 +26,12 @@ void MainWindow::on_openFileButton_clicked()
     {
         // 读取文件并解码
         FileDecoder *fileDecoder = new FileDecoder(fileName.toStdString());
-        fileDecoder->decodeFile();
+        if (fileDecoder->decodeFile())
+        {
+            // 渲染图形
+            ui->mapWidget->setPolyline(fileDecoder->polyline, fileDecoder->size);
+            ui->mapWidget->setBoundary(fileDecoder->maxX, fileDecoder->minX, fileDecoder->maxY, fileDecoder->minY);
+            ui->mapWidget->update();
+        }
     }
 }

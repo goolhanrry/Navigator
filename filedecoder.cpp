@@ -14,8 +14,9 @@ bool FileDecoder::decodeFile()
 {
     string buffer;
     stringstream stream;
-    int offset, size, index = 0;
+    int offset, numOfPoint, index = 0;
     float x, y;
+    bool firstLine = true;
 
     try
     {
@@ -63,14 +64,14 @@ bool FileDecoder::decodeFile()
         {
             // 读取一条折线所包含点的个数
             stream << buffer.substr(66, 4);
-            stream >> size;
+            stream >> numOfPoint;
             stream.clear();
 
             // 初始化 QPolyline 大小
-            polyline[index].setSize(size);
+            polyline[index].setSize(numOfPoint);
 
             // 逐行读取坐标
-            for (int i = 0; i < size / 2; i++)
+            for (int i = 0; i < numOfPoint / 2; i++)
             {
                 getline(fs, buffer);
 
@@ -82,7 +83,24 @@ bool FileDecoder::decodeFile()
                 stream >> y;
                 stream.clear();
 
-                polyline[index].addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
+                // 初始化边界
+                if (firstLine)
+                {
+                    firstLine = false;
+                    maxX = x;
+                    minX = x;
+                    maxY = y;
+                    minY = y;
+                }
+                else
+                {
+                    maxX = x > maxX ? x : maxX;
+                    minX = x < minX ? x : minX;
+                    maxY = y > maxY ? y : maxY;
+                    minY = y < minY ? y : minY;
+                }
+
+                polyline[index].addPoint(x, y);
 
                 stream << buffer.substr(29, 13);
                 stream >> x;
@@ -92,10 +110,15 @@ bool FileDecoder::decodeFile()
                 stream >> y;
                 stream.clear();
 
-                polyline[index].addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
+                maxX = x > maxX ? x : maxX;
+                minX = x < minX ? x : minX;
+                maxY = y > maxY ? y : maxY;
+                minY = y < minY ? y : minY;
+
+                polyline[index].addPoint(x, y);
             }
 
-            if (size % 2)
+            if (numOfPoint % 2)
             {
                 getline(fs, buffer);
 
@@ -107,7 +130,12 @@ bool FileDecoder::decodeFile()
                 stream >> y;
                 stream.clear();
 
-                polyline[index].addPoint(int(x * COEFFICIENT), int(y * COEFFICIENT));
+                maxX = x > maxX ? x : maxX;
+                minX = x < minX ? x : minX;
+                maxY = y > maxY ? y : maxY;
+                minY = y < minY ? y : minY;
+
+                polyline[index].addPoint(x, y);
             }
 
             index++;

@@ -1,18 +1,18 @@
 #ifndef QPOLYLINE_H
 #define QPOLYLINE_H
 
-#include <QPoint>
+#include "qgeopoint.h"
 
 class QPolyline
 {
-  public:
-    QPolyline();
+public:
+  QPolyline();
 
-    void addPoint(int x, int y);
-    void setSize(int size);
+  void addPoint(float x, float y);
+  void setSize(int size);
 
-    int size, count = 0;
-    QPoint *pts;
+  int size, count = 0;
+  QGeoPoint *pts;
 };
 
 #endif // QPOLYLINE_H

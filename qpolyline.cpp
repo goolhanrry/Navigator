@@ -5,10 +5,10 @@ QPolyline::QPolyline() {}
 void QPolyline::setSize(int size)
 {
     this->size = size;
-    pts = new QPoint[size];
+    pts = new QGeoPoint[size];
 }
 
-void QPolyline::addPoint(int x, int y)
+void QPolyline::addPoint(float x, float y)
 {
     // 若数组已满则返回
     if (count >= size)
@@ -16,7 +16,6 @@ void QPolyline::addPoint(int x, int y)
         return;
     }
 
-    pts[count].setX(x);
-    pts[count].setY(y);
+    pts[count].setCoordinate(x, y);
     count++;
 }

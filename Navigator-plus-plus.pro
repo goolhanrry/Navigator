@@ -30,13 +30,15 @@ SOURCES += \
         mainwindow.cpp \
         filedecoder.cpp \
     mapwidget.cpp \
-    qpolyline.cpp
+    qpolyline.cpp \
+    qgeopoint.cpp
 
 HEADERS += \
         mainwindow.h \
         filedecoder.h \
     mapwidget.h \
-    qpolyline.h
+    qpolyline.h \
+    qgeopoint.h
 
 FORMS += \
         mainwindow.ui

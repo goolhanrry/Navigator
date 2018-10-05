@@ -16,6 +16,8 @@ public:
   bool decodeFile(); // 文件解析方法
 
   QPolyline *polyline;
+  int size;
+  float maxX, minX, maxY, minY;
 
 private:
   string fileName;
