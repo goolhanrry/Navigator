@@ -12,9 +12,8 @@ FileDecoder::FileDecoder(string fileName)
 
 bool FileDecoder::decodeFile()
 {
-    string buffer, index;
-    stringstream stream;
-    int numOfPoint;
+    string line, index;
+    int numOfPoint, fileIndex = 0;
     float x, y;
     bool firstLine = true;
 
@@ -24,26 +23,33 @@ bool FileDecoder::decodeFile()
         ifstream fs(fileName, ios::in);
 
         // 将文件读取指针定位到线要素
-        while (buffer != "ARC  2")
+        while (line != "ARC  2")
         {
-            getline(fs, buffer);
+            getline(fs, line);
         }
 
+        fs.seekg(10, ios::cur);
+
         // 读取数据
-        while (getline(fs, buffer))
+        while (!fs.eof())
         {
             // 读取折线编号
-            index = buffer.substr(0, 10);
-            index.erase(0, index.find_first_not_of(" "));
+            fs >> index;
 
             // 读取一条折线所包含点的个数
-            stream << buffer.substr(66, 4);
-            stream >> numOfPoint;
-            stream.clear();
+            fs.seekg(45, ios::cur);
+            fs >> numOfPoint;
 
             // 判断线要素是否结束
             if (!numOfPoint)
             {
+                break;
+            }
+
+            // 判断文件流是否结束
+            if (fs.eof())
+            {
+                switchFile(&fs, ++fileIndex);
                 break;
             }
 
@@ -52,17 +58,16 @@ bool FileDecoder::decodeFile()
             polyline.push_back(newPolyline);
 
             // 逐行读取坐标
-            for (int i = 0; i < numOfPoint / 2; i++)
+            for (int i = 0; i < numOfPoint; i++)
             {
-                getline(fs, buffer);
+                fs >> x >> y;
 
-                stream << buffer.substr(1, 13);
-                stream >> x;
-                stream.clear();
-
-                stream << buffer.substr(15, 13);
-                stream >> y;
-                stream.clear();
+                // 判断文件流是否结束
+                if (fs.eof())
+                {
+                    switchFile(&fs, ++fileIndex);
+                    continue;
+                }
 
                 // 初始化边界
                 if (firstLine)
@@ -82,42 +87,10 @@ bool FileDecoder::decodeFile()
                 }
 
                 polyline.back()->addPoint(x, y);
-
-                stream << buffer.substr(29, 13);
-                stream >> x;
-                stream.clear();
-
-                stream << buffer.substr(43, 13);
-                stream >> y;
-                stream.clear();
-
-                maxX = x > maxX ? x : maxX;
-                minX = x < minX ? x : minX;
-                maxY = y > maxY ? y : maxY;
-                minY = y < minY ? y : minY;
-
-                polyline.back()->addPoint(x, y);
             }
 
-            if (numOfPoint % 2)
-            {
-                getline(fs, buffer);
-
-                stream << buffer.substr(1, 13);
-                stream >> x;
-                stream.clear();
-
-                stream << buffer.substr(15, 13);
-                stream >> y;
-                stream.clear();
-
-                maxX = x > maxX ? x : maxX;
-                minX = x < minX ? x : minX;
-                maxY = y > maxY ? y : maxY;
-                minY = y < minY ? y : minY;
-
-                polyline.back()->addPoint(x, y);
-            }
+            // 读取到文件末尾时将 eofbit 置为 true
+            fs >> line;
         }
 
         fs.close();
@@ -129,4 +102,18 @@ bool FileDecoder::decodeFile()
         // 文件读取失败，返回 false
         return false;
     }
+}
+
+void FileDecoder::switchFile(ifstream *fs, int fileIndex)
+{
+    stringstream stream;
+    string index;
+
+    fs->close();
+
+    stream << fileIndex;
+    stream >> index;
+    fileName = fileName.substr(0, fileName.length() - (fileIndex >= 10 ? 2 : 1)) + index;
+
+    fs->open(fileName, ios::in);
 }
