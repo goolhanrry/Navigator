@@ -60,12 +60,12 @@ void MapWidget::paintGL()
     // glEnd();
 
     // 绘制图形
-    for (vector<QPolyline *>::iterator item = polyline.begin(); item != polyline.end(); item++)
+    for (auto item : polyline)
     {
         glBegin(GL_LINE_STRIP);
-        for (int i = 0; i < (*item)->size; i++)
+        for (int i = 0; i < item->size; i++)
         {
-            glVertex2f(((*item)->pts[i].x - dX) / mX, ((*item)->pts[i].y - dY) / mY);
+            glVertex2f((item->pts[i].x - dX) / mX, (item->pts[i].y - dY) / mY);
         }
         glEnd();
     }
