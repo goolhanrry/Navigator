@@ -30,7 +30,7 @@ void MainWindow::on_openFileButton_clicked()
         if (fileDecoder->decodeFile())
         {
             // 渲染图形
-            ui->mapWidget->setPolyline(fileDecoder->polyline, fileDecoder->size);
+            ui->mapWidget->setPolyline(fileDecoder->polyline);
             ui->mapWidget->setBoundary(fileDecoder->maxX, fileDecoder->minX, fileDecoder->maxY, fileDecoder->minY);
             ui->mapWidget->update();
         }

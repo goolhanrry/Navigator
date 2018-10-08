@@ -3,7 +3,9 @@
 
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
+#include <vector>
 #include "qpolyline.h"
+using namespace std;
 
 class MapWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
@@ -16,16 +18,14 @@ public:
   void resizeGL(int width, int height) Q_DECL_OVERRIDE;
   void paintGL() Q_DECL_OVERRIDE;
 
-  void setPolyline(QPolyline *polyline, int size);
+  void setPolyline(vector<QPolyline *> polyline);
   void setBoundary(float maxX, float minX, float maxY, float minY);
 
   QWidget *parent;
-  float maxX = 1, minX = -1, maxY = 1, minY = -1;
+  float maxX, minX, maxY, minY;
 
 private:
-  void fixScale(int width, int height);
-
-  QPolyline *polyline;
+  vector<QPolyline *> polyline;
   int size = 0;
 
 signals:

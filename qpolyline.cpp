@@ -1,9 +1,8 @@
 #include "qpolyline.h"
 
-QPolyline::QPolyline() {}
-
-void QPolyline::setSize(int size)
+QPolyline::QPolyline(string index, int size)
 {
+    this->index = index;
     this->size = size;
     pts = new QGeoPoint[size];
 }

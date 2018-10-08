@@ -4,6 +4,7 @@
 #define COEFFICIENT 100000
 
 #include <string>
+#include <vector>
 #include "mainwindow.h"
 #include "qpolyline.h"
 using namespace std;
@@ -15,11 +16,10 @@ public:
 
   bool decodeFile(); // 文件解析方法
 
-  QPolyline *polyline;
-  int size;
+  vector<QPolyline *> polyline;
   float maxX, minX, maxY, minY;
 
-private:
+protected:
   string fileName;
 };
 

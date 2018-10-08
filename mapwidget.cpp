@@ -25,7 +25,17 @@ void MapWidget::initializeGL()
 
 void MapWidget::resizeGL(int width, int height)
 {
-    this->fixScale(width, height);
+    float dX = maxX - minX;
+    float dY = maxY - minY;
+
+    if (dX >= dY)
+    {
+        glViewport(0.1f * width, height - 0.9f * width * dY / dX, 1.8f * width, 1.8f * width * dY / dX);
+    }
+    else
+    {
+        glViewport(width - 0.9f * height * dX / dY, 0.1f * height, 1.8f * height * dX / dY, 1.8f * height);
+    }
 }
 
 void MapWidget::paintGL()
@@ -37,7 +47,7 @@ void MapWidget::paintGL()
     float dY = mY + minY;
 
     // 绘图比例修正
-    this->fixScale(this->width(), this->height());
+    this->resizeGL(this->width(), this->height());
 
     // 清空画布
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -50,21 +60,20 @@ void MapWidget::paintGL()
     // glEnd();
 
     // 绘制图形
-    for (int i = 0; i < size; i++)
+    for (vector<QPolyline *>::iterator item = polyline.begin(); item != polyline.end(); item++)
     {
         glBegin(GL_LINE_STRIP);
-        for (int j = 0; j < polyline[i].size; j++)
+        for (int i = 0; i < (*item)->size; i++)
         {
-            glVertex2f((polyline[i].pts[j].x - dX) / mX, (polyline[i].pts[j].y - dY) / mY);
+            glVertex2f(((*item)->pts[i].x - dX) / mX, ((*item)->pts[i].y - dY) / mY);
         }
         glEnd();
     }
 }
 
-void MapWidget::setPolyline(QPolyline *polyline, int size)
+void MapWidget::setPolyline(vector<QPolyline *> polyline)
 {
     this->polyline = polyline;
-    this->size = size;
 }
 
 void MapWidget::setBoundary(float maxX, float minX, float maxY, float minY)
@@ -73,19 +82,4 @@ void MapWidget::setBoundary(float maxX, float minX, float maxY, float minY)
     this->minX = minX;
     this->maxY = maxY;
     this->minY = minY;
-}
-
-void MapWidget::fixScale(int width, int height)
-{
-    float dX = maxX - minX;
-    float dY = maxY - minY;
-
-    if (dX >= dY)
-    {
-        glViewport(0.1f * width, height - 0.9f * width * dY / dX, 1.8f * width, 1.8f * width * dY / dX);
-    }
-    else
-    {
-        glViewport(width - 0.9f * height * dX / dY, 0.1f * height, 1.8f * height * dX / dY, 1.8f * height);
-    }
 }
