@@ -26,7 +26,7 @@ private:
   void fixScale(int width, int height);
 
   QPolyline *polyline;
-  int size;
+  int size = 0;
 
 signals:
 

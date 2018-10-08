@@ -20,9 +20,10 @@ MainWindow::~MainWindow()
 void MainWindow::on_openFileButton_clicked()
 {
     // 打开模式对话框，选择文件
-    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "../../../", "*.e00");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "/", "*.e00");
 
-    if (fileName.length())
+    // 文件格式校验
+    if (fileName.section('.', -1) == "e00")
     {
         // 读取文件并解码
         FileDecoder *fileDecoder = new FileDecoder(fileName.toStdString());
@@ -33,5 +34,13 @@ void MainWindow::on_openFileButton_clicked()
             ui->mapWidget->setBoundary(fileDecoder->maxX, fileDecoder->minX, fileDecoder->maxY, fileDecoder->minY);
             ui->mapWidget->update();
         }
+        else
+        {
+            QMessageBox::critical(this, "Data format error", "Can't open file \"" + fileName.section('.', -2) + "\"", QMessageBox::Yes);
+        }
+    }
+    else if (fileName.length())
+    {
+        QMessageBox::critical(this, "File type error", "Please choose a \".e00\" file", QMessageBox::Yes);
     }
 }

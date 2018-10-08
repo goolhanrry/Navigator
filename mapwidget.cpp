@@ -25,7 +25,7 @@ void MapWidget::initializeGL()
 
 void MapWidget::resizeGL(int width, int height)
 {
-    this->fixScale(this->width(), this->height());
+    this->fixScale(width, height);
 }
 
 void MapWidget::paintGL()

@@ -67,6 +67,12 @@ bool FileDecoder::decodeFile()
             stream >> numOfPoint;
             stream.clear();
 
+            // 判断线要素是否结束
+            if (!numOfPoint)
+            {
+                break;
+            }
+
             // 初始化 QPolyline 大小
             polyline[index].setSize(numOfPoint);
 
