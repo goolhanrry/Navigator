@@ -2,9 +2,11 @@
 #include "ui_mainwindow.h"
 #include "filedecoder.h"
 #include "mapwidget.h"
+#include <iostream>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <string>
+using namespace std;
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
                                           ui(new Ui::MainWindow)
@@ -20,7 +22,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_openFileButton_clicked()
 {
     // 打开模式对话框，选择文件
-    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "/", "*.e00");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "./", "*.e00");
 
     // 文件格式校验
     if (fileName.section('.', -1) == "e00")
@@ -32,6 +34,7 @@ void MainWindow::on_openFileButton_clicked()
             // 渲染图形
             ui->mapWidget->setPolyline(fileDecoder->polyline);
             ui->mapWidget->setBoundary(fileDecoder->maxX, fileDecoder->minX, fileDecoder->maxY, fileDecoder->minY);
+            ui->mapWidget->resetOffset();
             ui->mapWidget->update();
         }
         else

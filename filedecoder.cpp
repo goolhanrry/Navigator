@@ -28,13 +28,11 @@ bool FileDecoder::decodeFile()
             getline(fs, line);
         }
 
-        fs.seekg(10, ios::cur);
-
         // 读取数据
-        while (!fs.eof())
+        while (true)
         {
             // 读取折线编号
-            fs >> index;
+            fs >> line >> index;
 
             // 读取一条折线所包含点的个数
             fs.seekg(45, ios::cur);
@@ -50,7 +48,6 @@ bool FileDecoder::decodeFile()
             if (fs.eof())
             {
                 switchFile(&fs, ++fileIndex);
-                break;
             }
 
             // 为线要素分配内存
@@ -61,13 +58,6 @@ bool FileDecoder::decodeFile()
             for (int i = 0; i < numOfPoint; i++)
             {
                 fs >> x >> y;
-
-                // 判断文件流是否结束
-                if (fs.eof())
-                {
-                    switchFile(&fs, ++fileIndex);
-                    continue;
-                }
 
                 // 初始化边界
                 if (firstLine)
@@ -87,10 +77,13 @@ bool FileDecoder::decodeFile()
                 }
 
                 polyline.back()->addPoint(x, y);
-            }
 
-            // 读取到文件末尾时将 eofbit 置为 true
-            fs >> line;
+                // 判断文件流是否结束
+                if (fs.eof())
+                {
+                    switchFile(&fs, ++fileIndex);
+                }
+            }
         }
 
         fs.close();

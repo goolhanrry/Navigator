@@ -29,16 +29,16 @@ SOURCES += \
         main.cpp \
         mainwindow.cpp \
         filedecoder.cpp \
-    mapwidget.cpp \
     qpolyline.cpp \
-    qgeopoint.cpp
+    qgeopoint.cpp \
+    mapwidget.cpp
 
 HEADERS += \
         mainwindow.h \
         filedecoder.h \
-    mapwidget.h \
     qpolyline.h \
-    qgeopoint.h
+    qgeopoint.h \
+    mapwidget.h
 
 FORMS += \
         mainwindow.ui

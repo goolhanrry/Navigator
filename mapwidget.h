@@ -1,6 +1,9 @@
 #ifndef MAPWIDGET_H
 #define MAPWIDGET_H
 
+#include <QApplication>
+#include <QMouseEvent>
+#include <QWheelEvent>
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <vector>
@@ -20,13 +23,21 @@ public:
 
   void setPolyline(vector<QPolyline *> polyline);
   void setBoundary(float maxX, float minX, float maxY, float minY);
+  void resetOffset();
 
   QWidget *parent;
   float maxX, minX, maxY, minY;
 
 private:
+  void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;   // 鼠标按下
+  void mouseReleaseEvent(QMouseEvent *event) Q_DECL_OVERRIDE; // 鼠标抬起
+  void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;    // 鼠标移动
+  void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;        // 滚轮滑动
+
   vector<QPolyline *> polyline;
-  int size = 0;
+  QCursor cursor;                                                                  // 光标形状
+  double mouseX, mouseY, offsetX = 0, offsetY = 0, newOffsetX = 0, newOffsetY = 0; // 鼠标及图像偏移量
+  float scale = 0.9;                                                               // 图像缩放比例
 
 signals:
 
