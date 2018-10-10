@@ -32,12 +32,6 @@ void MapWidget::resizeGL(int width, int height)
 
 void MapWidget::paintGL()
 {
-    // 边界预处理
-    float dX = maxX - minX;
-    float dY = maxY - minY;
-    float mX = dX / 2 + minX;
-    float mY = dY / 2 + minY;
-
     // 清空画布
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -80,16 +74,22 @@ void MapWidget::setPolyline(vector<QPolyline *> polyline)
 
 void MapWidget::setBoundary(float maxX, float minX, float maxY, float minY)
 {
-    this->maxX = maxX;
-    this->minX = minX;
-    this->maxY = maxY;
-    this->minY = minY;
+    // 边界预处理
+    dX = maxX - minX;
+    dY = maxY - minY;
+    mX = dX / 2 + minX;
+    mY = dY / 2 + minY;
 }
 
 void MapWidget::resetOffset()
 {
     offsetX = 0;
     offsetY = 0;
+
+    newOffsetX = 0;
+    newOffsetY = 0;
+
+    scale = 1;
 }
 
 void MapWidget::mousePressEvent(QMouseEvent *event)
@@ -103,16 +103,21 @@ void MapWidget::mousePressEvent(QMouseEvent *event)
         // 初始化鼠标位置
         mouseX = event->localPos().x();
         mouseY = event->localPos().y();
-
-        // 初始化图像偏移量
-        offsetX += newOffsetX;
-        offsetY += newOffsetY;
     }
 }
 
 void MapWidget::mouseReleaseEvent(QMouseEvent *event)
 {
+    // 恢复光标样式
     unsetCursor();
+
+    // 固化图像偏移量
+    offsetX += newOffsetX;
+    offsetY += newOffsetY;
+
+    // 恢复图像偏移增量
+    newOffsetX = 0;
+    newOffsetY = 0;
 }
 
 void MapWidget::mouseMoveEvent(QMouseEvent *event)
@@ -120,7 +125,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *event)
     // 判断是否按下左键
     if (event->buttons() == Qt::LeftButton)
     {
-        // 计算鼠标偏移量
+        // 计算图像偏移量
         newOffsetX = 2 * (event->localPos().x() - mouseX) / this->width();
         newOffsetY = 2 * (mouseY - event->localPos().y()) / this->height();
 
@@ -131,5 +136,14 @@ void MapWidget::mouseMoveEvent(QMouseEvent *event)
 
 void MapWidget::wheelEvent(QWheelEvent *event)
 {
+    scale -= 0.01 * event->delta();
 
+    // 限制缩小倍数
+    if (scale < 0.9f)
+    {
+        scale = 0.9f;
+    }
+
+    // 重绘图像
+    update();
 }

@@ -26,7 +26,6 @@ public:
   void resetOffset();
 
   QWidget *parent;
-  float maxX, minX, maxY, minY;
 
 private:
   void mousePressEvent(QMouseEvent *event) Q_DECL_OVERRIDE;   // 鼠标按下
@@ -35,9 +34,9 @@ private:
   void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;        // 滚轮滑动
 
   vector<QPolyline *> polyline;
+  float dX, dY, mX, mY, scale = 0.9;
   QCursor cursor;                                                                  // 光标形状
   double mouseX, mouseY, offsetX = 0, offsetY = 0, newOffsetX = 0, newOffsetY = 0; // 鼠标及图像偏移量
-  float scale = 0.9;                                                               // 图像缩放比例
 
 signals:
 
