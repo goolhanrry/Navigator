@@ -34,7 +34,7 @@ private:
   void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;        // 滚轮滑动
 
   vector<QPolyline *> polyline;
-  float dX, dY, mX, mY, scale = 0.9;
+  float dX, dY, mX, mY, scale = 0.9f;
   QCursor cursor;                                                                  // 光标形状
   double mouseX, mouseY, offsetX = 0, offsetY = 0, newOffsetX = 0, newOffsetY = 0; // 鼠标及图像偏移量
 

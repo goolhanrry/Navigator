@@ -54,7 +54,7 @@ bool FileDecoder::decodeFile()
             QPolyline *newPolyline = new QPolyline(index, numOfPoint);
             polyline.push_back(newPolyline);
 
-            // 逐行读取坐标
+            // 逐点读取坐标
             for (int i = 0; i < numOfPoint; i++)
             {
                 fs >> x >> y;

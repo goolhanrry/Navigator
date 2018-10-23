@@ -89,7 +89,7 @@ void MapWidget::resetOffset()
     newOffsetX = 0;
     newOffsetY = 0;
 
-    scale = 1;
+    scale = 0.9f;
 }
 
 void MapWidget::mousePressEvent(QMouseEvent *event)
