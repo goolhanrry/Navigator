@@ -4,7 +4,7 @@
 class QGeoPoint
 {
   public:
-    QGeoPoint();
+    explicit QGeoPoint();
 
     void setCoordinate(float x, float y);
 

@@ -32,17 +32,20 @@ SOURCES += \
         qgeomap.cpp \
     qgeopolyline.cpp \
     qgeopoint.cpp \
-    mapwidget.cpp
+    mapwidget.cpp \
+    dialog.cpp
 
 HEADERS += \
         mainwindow.h \
         qgeomap.h \
     qgeopolyline.h \
     qgeopoint.h \
-    mapwidget.h
+    mapwidget.h \
+    dialog.h
 
 FORMS += \
-        mainwindow.ui
+        mainwindow.ui \
+    dialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

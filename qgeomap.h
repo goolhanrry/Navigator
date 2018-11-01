@@ -12,7 +12,7 @@ using namespace std;
 class QGeoMap
 {
 public:
-  QGeoMap(QWidget *parent);
+  explicit QGeoMap(QWidget *parent);
   ~QGeoMap();
 
   bool loadMap(string fileName);

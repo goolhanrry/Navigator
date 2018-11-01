@@ -8,7 +8,7 @@ using namespace std;
 class QGeoPolyline
 {
 public:
-  QGeoPolyline(int index, int FNode, int TNode, int size);
+  explicit QGeoPolyline(int index, int FNode, int TNode, int size);
   ~QGeoPolyline();
 
   void addPoint(float x, float y);

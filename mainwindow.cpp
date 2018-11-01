@@ -2,13 +2,13 @@
 #include "ui_mainwindow.h"
 #include "qgeomap.h"
 #include "mapwidget.h"
+#include "dialog.h"
 #include <QMessageBox>
 #include <QFileDialog>
 #include <string>
 using namespace std;
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent),
-                                          ui(new Ui::MainWindow)
+MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     path = "/";
@@ -56,5 +56,6 @@ void MainWindow::on_openFileButton_clicked()
 
 void MainWindow::on_analyzeButton_clicked()
 {
-
+    Dialog dialog;
+    dialog.exec();
 }
