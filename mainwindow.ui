@@ -19,11 +19,18 @@
   <property name="windowTitle">
    <string>Navigator++</string>
   </property>
+  <property name="windowIcon">
+   <iconset>
+    <normaloff>AppIcon.icns</normaloff>AppIcon.icns</iconset>
+  </property>
   <property name="locale">
    <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
+    <item row="1" column="0" colspan="8">
+     <widget class="MapWidget" name="mapWidget" native="true"/>
+    </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="openFileButton">
       <property name="cursor">
@@ -34,8 +41,15 @@
       </property>
      </widget>
     </item>
-    <item row="1" column="0" colspan="8">
-     <widget class="MapWidget" name="mapWidget" native="true"/>
+    <item row="0" column="1">
+     <widget class="QPushButton" name="analyzeButton">
+      <property name="cursor">
+       <cursorShape>PointingHandCursor</cursorShape>
+      </property>
+      <property name="text">
+       <string>Analyze</string>
+      </property>
+     </widget>
     </item>
    </layout>
   </widget>

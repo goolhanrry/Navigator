@@ -1,5 +1,5 @@
-#ifndef QPOLYLINE_H
-#define QPOLYLINE_H
+#ifndef QGEOPOLYLINE_H
+#define QGEOPOLYLINE_H
 
 #include <string>
 #include "qgeopoint.h"
@@ -8,14 +8,13 @@ using namespace std;
 class QGeoPolyline
 {
 public:
-  QGeoPolyline(string index, int size);
+  QGeoPolyline(int index, int FNode, int TNode, int size);
   ~QGeoPolyline();
 
   void addPoint(float x, float y);
 
-  string index;
-  int size, count = 0;
+  int index, FNode, TNode, size, count = 0;
   QGeoPoint *pts;
 };
 
-#endif // QPOLYLINE_H
+#endif // QGEOPOLYLINE_H

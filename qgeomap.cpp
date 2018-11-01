@@ -31,8 +31,8 @@ QGeoMap::~QGeoMap()
  *************************************************/
 bool QGeoMap::loadMap(string fileName)
 {
-    string line, index;
-    int numOfPoint, fileIndex = 0;
+    string buffer;
+    int index, FNode, TNode, LPoly, RPoly, numOfPoint, fileIndex = 0;
     float x, y;
     bool firstLine = true;
 
@@ -48,20 +48,16 @@ bool QGeoMap::loadMap(string fileName)
         }
 
         // 将文件读取指针定位到线要素
-        while (line != "ARC  2")
+        while (buffer != "ARC  2" & buffer != "ARC  3")
         {
-            getline(fs, line);
+            getline(fs, buffer);
         }
 
         // 读取数据
         while (true)
         {
-            // 读取折线编号
-            fs >> line >> index;
-
-            // 读取一条折线所包含点的个数
-            fs.seekg(45, ios::cur);
-            fs >> numOfPoint;
+            // 读取折线数据
+            fs >> buffer >> index >> FNode >> TNode >> LPoly >> RPoly >> numOfPoint;
 
             // 判断线要素是否结束
             if (!numOfPoint)
@@ -76,7 +72,7 @@ bool QGeoMap::loadMap(string fileName)
             }
 
             // 为线要素分配内存
-            QGeoPolyline *newPolyline = new QGeoPolyline(index, numOfPoint);
+            QGeoPolyline *newPolyline = new QGeoPolyline(index, FNode, TNode, numOfPoint);
             polyline.push_back(newPolyline);
 
             // 逐点读取坐标
@@ -117,14 +113,14 @@ bool QGeoMap::loadMap(string fileName)
     }
     catch (string fileName)
     {
-        // 捕获文件读取异常，原因：找不到文件或文件格式错误
-        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile missing or bad type", QMessageBox::Yes);
+        // 捕获文件读取异常，原因：找不到文件或文件编码错误
+        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile Missing or Bad Encoding", QMessageBox::Yes);
         return false;
     }
     catch (...)
     {
-        // 捕获文件读取异常，未知原因
-        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\": Unknown error", QMessageBox::Yes);
+        // 捕获文件读取异常，原因：文件格式错误
+        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nBad Format", QMessageBox::Yes);
         return false;
     }
 }

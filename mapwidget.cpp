@@ -149,7 +149,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *event)
 
 void MapWidget::wheelEvent(QWheelEvent *event)
 {
-    scale -= 0.01 * event->delta();
+    scale += 0.01 * event->delta();
 
     // 限制缩小倍数
     if (scale < 0.9f)

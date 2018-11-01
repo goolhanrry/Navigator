@@ -1,8 +1,10 @@
 #include "qgeopolyline.h"
 
-QGeoPolyline::QGeoPolyline(string index, int size)
+QGeoPolyline::QGeoPolyline(int index, int FNode, int TNode, int size)
 {
     this->index = index;
+    this->FNode = FNode;
+    this->TNode = TNode;
     this->size = size;
     pts = new QGeoPoint[size];
 }
