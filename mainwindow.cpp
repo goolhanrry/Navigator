@@ -22,7 +22,7 @@ MainWindow::~MainWindow()
 void MainWindow::on_openFileButton_clicked()
 {
     // 打开模式对话框，选择文件
-    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "./", "*.e00");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", "/", "*.e00");
 
     // 文件格式校验
     if (fileName.section('.', -1) == "e00")
