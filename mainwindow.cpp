@@ -1,6 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "filedecoder.h"
+#include "qgeomap.h"
 #include "mapwidget.h"
 #include <iostream>
 #include <QMessageBox>
@@ -28,18 +28,18 @@ void MainWindow::on_openFileButton_clicked()
     if (fileName.section('.', -1) == "e00")
     {
         // 读取文件并解码
-        FileDecoder *fileDecoder = new FileDecoder(fileName.toStdString());
-        if (fileDecoder->decodeFile())
+        QGeoMap *map = new QGeoMap(this);
+        if (map->loadMap(fileName.toStdString()))
         {
             // 渲染图形
-            ui->mapWidget->setPolyline(fileDecoder->polyline);
-            ui->mapWidget->setBoundary(fileDecoder->maxX, fileDecoder->minX, fileDecoder->maxY, fileDecoder->minY);
+            ui->mapWidget->setPolyline(map->polyline);
+            ui->mapWidget->setBoundary(map->maxX, map->minX, map->maxY, map->minY);
             ui->mapWidget->resetOffset();
             ui->mapWidget->update();
         }
         else
         {
-            QMessageBox::critical(this, "Data format error", "Can't open file \"" + fileName.section('.', -2) + "\"", QMessageBox::Yes);
+            delete map;
         }
     }
     else if (fileName.length())

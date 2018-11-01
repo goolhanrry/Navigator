@@ -5,10 +5,11 @@
 #include "qgeopoint.h"
 using namespace std;
 
-class QPolyline
+class QGeoPolyline
 {
 public:
-  QPolyline(string index, int size);
+  QGeoPolyline(string index, int size);
+  ~QGeoPolyline();
 
   void addPoint(float x, float y);
 

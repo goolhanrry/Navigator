@@ -43,7 +43,7 @@ void MapWidget::paintGL()
     // 绘制图形
     if (this->width() * dY >= this->height() * dX)
     {
-        for (auto item : polyline)
+        for (QGeoPolyline *item : polyline)
         {
             glBegin(GL_LINE_STRIP);
             for (int i = 0; i < item->size; i++)
@@ -55,7 +55,7 @@ void MapWidget::paintGL()
     }
     else
     {
-        for (auto item : polyline)
+        for (QGeoPolyline *item : polyline)
         {
             glBegin(GL_LINE_STRIP);
             for (int i = 0; i < item->size; i++)
@@ -67,7 +67,7 @@ void MapWidget::paintGL()
     }
 }
 
-void MapWidget::setPolyline(vector<QPolyline *> polyline)
+void MapWidget::setPolyline(vector<QGeoPolyline *> polyline)
 {
     this->polyline = polyline;
 }

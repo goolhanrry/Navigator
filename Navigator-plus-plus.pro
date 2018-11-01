@@ -29,15 +29,15 @@ CONFIG += sdk_no_version_check
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-        filedecoder.cpp \
-    qpolyline.cpp \
+        qgeomap.cpp \
+    qgeopolyline.cpp \
     qgeopoint.cpp \
     mapwidget.cpp
 
 HEADERS += \
         mainwindow.h \
-        filedecoder.h \
-    qpolyline.h \
+        qgeomap.h \
+    qgeopolyline.h \
     qgeopoint.h \
     mapwidget.h
 

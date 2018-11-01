@@ -1,16 +1,29 @@
-#include "filedecoder.h"
+#include "qgeomap.h"
 #include <QMessageBox>
-#include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iostream>
 using namespace std;
 
-FileDecoder::FileDecoder(string fileName)
+QGeoMap::QGeoMap(QWidget *parent)
 {
-    this->fileName = fileName;
+    this->parent = parent;
 }
 
-bool FileDecoder::decodeFile()
+QGeoMap::~QGeoMap()
+{
+    // 指向 MainWindow 的指针置空，其内存交由系统释放
+    parent = nullptr;
+
+    // 释放线要素所占的内存
+    for (QGeoPolyline *item : polyline)
+    {
+        delete item;
+        item = nullptr;
+    }
+}
+
+bool QGeoMap::loadMap(string fileName)
 {
     string line, index;
     int numOfPoint, fileIndex = 0;
@@ -21,6 +34,12 @@ bool FileDecoder::decodeFile()
     {
         // 将文件读入内存
         ifstream fs(fileName, ios::in);
+
+        // 若文件打开失败则抛出异常
+        if (!fs.is_open())
+        {
+            throw fileName;
+        }
 
         // 将文件读取指针定位到线要素
         while (line != "ARC  2")
@@ -47,11 +66,11 @@ bool FileDecoder::decodeFile()
             // 判断文件流是否结束
             if (fs.eof())
             {
-                switchFile(&fs, ++fileIndex);
+                switchFile(&fs, fileName, ++fileIndex);
             }
 
             // 为线要素分配内存
-            QPolyline *newPolyline = new QPolyline(index, numOfPoint);
+            QGeoPolyline *newPolyline = new QGeoPolyline(index, numOfPoint);
             polyline.push_back(newPolyline);
 
             // 逐点读取坐标
@@ -81,7 +100,7 @@ bool FileDecoder::decodeFile()
                 // 判断文件流是否结束
                 if (fs.eof())
                 {
-                    switchFile(&fs, ++fileIndex);
+                    switchFile(&fs, fileName, ++fileIndex);
                 }
             }
         }
@@ -90,23 +109,38 @@ bool FileDecoder::decodeFile()
 
         return true;
     }
-    catch (exception e)
+    catch (string fileName)
     {
-        // 文件读取失败，返回 false
+        // 捕获文件读取异常，原因：文件无法打开
+        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile missing or bad type", QMessageBox::Yes);
+
+        return false;
+    }
+    catch (...)
+    {
+        // 捕获文件读取异常，未知原因
+        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\": Unknown error", QMessageBox::Yes);
+
         return false;
     }
 }
 
-void FileDecoder::switchFile(ifstream *fs, int fileIndex)
+void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 {
     stringstream stream;
-    string index;
+    string index, nextFileName;
 
     fs->close();
 
-    stream << fileIndex;
+    stream << fileIndex + 1;
     stream >> index;
-    fileName = fileName.substr(0, fileName.length() - (fileIndex >= 10 ? 2 : 1)) + index;
+    nextFileName = fileName.substr(0, fileName.length() - (fileIndex >= 10 ? 2 : 1)) + index;
 
-    fs->open(fileName, ios::in);
+    fs->open(nextFileName, ios::in);
+
+    // 若新文件打开失败则抛出异常
+    if (!fs->is_open())
+    {
+        throw nextFileName;
+    }
 }

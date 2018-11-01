@@ -7,7 +7,7 @@
 #include <QOpenGLWidget>
 #include <QOpenGLFunctions>
 #include <vector>
-#include "qpolyline.h"
+#include "qgeopolyline.h"
 using namespace std;
 
 class MapWidget : public QOpenGLWidget, protected QOpenGLFunctions
@@ -21,7 +21,7 @@ public:
   void resizeGL(int width, int height) Q_DECL_OVERRIDE;
   void paintGL() Q_DECL_OVERRIDE;
 
-  void setPolyline(vector<QPolyline *> polyline);
+  void setPolyline(vector<QGeoPolyline *> polyline);
   void setBoundary(float maxX, float minX, float maxY, float minY);
   void resetOffset();
 
@@ -33,7 +33,7 @@ private:
   void mouseMoveEvent(QMouseEvent *event) Q_DECL_OVERRIDE;    // 鼠标移动
   void wheelEvent(QWheelEvent *event) Q_DECL_OVERRIDE;        // 滚轮滑动
 
-  vector<QPolyline *> polyline;
+  vector<QGeoPolyline *> polyline;
   float dX, dY, mX, mY, scale = 0.9f;
   QCursor cursor;                                                                  // 光标形状
   double mouseX, mouseY, offsetX = 0, offsetY = 0, newOffsetX = 0, newOffsetY = 0; // 鼠标及图像偏移量
