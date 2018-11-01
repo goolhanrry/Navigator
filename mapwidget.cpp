@@ -11,6 +11,7 @@ MapWidget::MapWidget(QWidget *parent)
 
 MapWidget::~MapWidget()
 {
+    // 指向 MainWindow 的指针置空，其内存交由系统释放
     parent = nullptr;
 }
 

@@ -111,16 +111,14 @@ bool QGeoMap::loadMap(string fileName)
     }
     catch (string fileName)
     {
-        // 捕获文件读取异常，原因：文件无法打开
+        // 捕获文件读取异常，原因：找不到文件或文件格式错误
         QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile missing or bad type", QMessageBox::Yes);
-
         return false;
     }
     catch (...)
     {
         // 捕获文件读取异常，未知原因
         QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\": Unknown error", QMessageBox::Yes);
-
         return false;
     }
 }
