@@ -23,6 +23,13 @@ QGeoMap::~QGeoMap()
     }
 }
 
+/*************************************************
+ *  @brief 从 e00 文件中读取地图数据
+ *  @param fileName   待读取的文件路径
+ *  @return
+ *      -true   读取成功
+ *      -false  读取失败
+ *************************************************/
 bool QGeoMap::loadMap(string fileName)
 {
     string line, index;
@@ -123,6 +130,12 @@ bool QGeoMap::loadMap(string fileName)
     }
 }
 
+/*************************************************
+ *  @brief 切换待读取的文件以继续读取地图数据
+ *  @param *fs       输入文件流的指针
+ *  @param fileName       原文件路径
+ *  @param fileIndex    当前文件索引
+ *************************************************/
 void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 {
     stringstream stream;
@@ -130,7 +143,7 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 
     fs->close();
 
-    stream << fileIndex + 1;
+    stream << fileIndex;
     stream >> index;
     nextFileName = fileName.substr(0, fileName.length() - (fileIndex >= 10 ? 2 : 1)) + index;
 

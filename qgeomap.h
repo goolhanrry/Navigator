@@ -15,7 +15,7 @@ public:
   QGeoMap(QWidget *parent);
   ~QGeoMap();
 
-  bool loadMap(string fileName); // 从 e00 文件中读取地图数据
+  bool loadMap(string fileName);
 
   vector<QGeoPolyline *> polyline;
   float maxX, minX, maxY, minY; // 地图边界坐标

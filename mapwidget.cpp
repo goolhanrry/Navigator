@@ -68,20 +68,33 @@ void MapWidget::paintGL()
     }
 }
 
+/*************************************************
+ *  @brief 设置 QOpenGLWidget 组件绘图所需的数据
+ *  @param polyline   要绘制的折线指针集合
+ *************************************************/
 void MapWidget::setPolyline(vector<QGeoPolyline *> polyline)
 {
     this->polyline = polyline;
 }
 
+/*************************************************
+ *  @brief 预处理待绘制图像的边界
+ *  @param maxX     右边界
+ *  @param minX     左边界
+ *  @param maxY     上边界
+ *  @param minY     下边界
+ *************************************************/
 void MapWidget::setBoundary(float maxX, float minX, float maxY, float minY)
 {
-    // 边界预处理
     dX = maxX - minX;
     dY = maxY - minY;
     mX = dX / 2 + minX;
     mY = dY / 2 + minY;
 }
 
+/*************************************************
+ *  @brief 恢复图像偏移量和缩放比例
+ *************************************************/
 void MapWidget::resetOffset()
 {
     offsetX = 0;

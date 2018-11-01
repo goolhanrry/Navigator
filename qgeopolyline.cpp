@@ -15,6 +15,11 @@ QGeoPolyline::~QGeoPolyline()
     pts = nullptr;
 }
 
+/*************************************************
+ *  @brief 添加点要素
+ *  @param x  横坐标
+ *  @param y  纵坐标
+ *************************************************/
 void QGeoPolyline::addPoint(float x, float y)
 {
     // 若数组已满则返回
