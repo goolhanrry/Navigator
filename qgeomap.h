@@ -1,11 +1,12 @@
 #ifndef QGEOMAP_H
 #define QGEOMAP_H
 
+#include <QtWidgets>
 #include <string>
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include "mainwindow.h"
+#include "qgeopoint.h"
 #include "qgeopolyline.h"
 using namespace std;
 
@@ -16,15 +17,17 @@ public:
   ~QGeoMap();
 
   bool loadMap(string fileName);
+  void shortestPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline;
-  float maxX, minX, maxY, minY; // 地图边界坐标
+  vector<QGeoPoint *> nodeList;
+  vector<int> openList, closedList; // 节点索引列表
+  float maxX, minX, maxY, minY;     // 地图边界坐标
 
 protected:
   void switchFile(ifstream *fs, string fileName, int fileIndex);
 
   QWidget *parent; // 指向父窗体的指针，用于捕获到异常时弹窗提示
-  vector<QGeoPoint *> openList, closedList; // 节点列表
 };
 
 #endif // QGEOMAP_H

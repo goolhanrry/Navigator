@@ -2,6 +2,7 @@
 #define DIALOG_H
 
 #include <QDialog>
+#include "qgeomap.h"
 
 namespace Ui
 {
@@ -13,11 +14,15 @@ class Dialog : public QDialog
     Q_OBJECT
 
   public:
-    explicit Dialog(QWidget *parent = nullptr);
+    explicit Dialog(QGeoMap *map);
     ~Dialog();
 
-  private:
+private slots:
+    void on_buttonBox_accepted();
+
+private:
     Ui::Dialog *ui;
+    QGeoMap *map; // 指向要进行路径分析的 QGeoMap 对象的指针
 };
 
 #endif // DIALOG_H

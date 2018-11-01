@@ -2,6 +2,7 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include "qgeomap.h"
 using namespace std;
 
 namespace Ui
@@ -14,7 +15,7 @@ class MainWindow : public QMainWindow
   Q_OBJECT
 
 public:
-  explicit MainWindow(QWidget *parent = nullptr);
+  explicit MainWindow();
   ~MainWindow();
 
 private slots:
@@ -23,7 +24,9 @@ private slots:
 
 private:
   Ui::MainWindow *ui;
-  QString path; // 上次打开文件的路径
+  QGeoMap *map;
+  QString path = "/"; // 上次打开文件的路径
+  bool hasMap = false; // 是否已打开地图文件
 };
 
 #endif // MAINWINDOW_H

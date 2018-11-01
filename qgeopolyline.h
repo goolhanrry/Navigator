@@ -8,12 +8,13 @@ using namespace std;
 class QGeoPolyline
 {
 public:
-  explicit QGeoPolyline(int index, int FNode, int TNode, int size);
+  explicit QGeoPolyline(int index, int size);
   ~QGeoPolyline();
 
   void addPoint(float x, float y);
+  void setNode(int FNode, int TNode);
 
-  int index, FNode, TNode, size, count = 0;
+  int index, size, count = 0;
   QGeoPoint *pts;
 };
 

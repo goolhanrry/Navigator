@@ -3,12 +3,14 @@
 
 class QGeoPoint
 {
-  public:
-    explicit QGeoPoint();
+public:
+  explicit QGeoPoint();
 
-    void setCoordinate(float x, float y);
+  void setIndex(int index);
+  void setCoordinate(float x, float y);
 
-    float x, y;
+  int index;
+  float x, y;
 };
 
 #endif // QGEOPOINT_H

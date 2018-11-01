@@ -1,17 +1,15 @@
+#include <QFileDialog>
+#include <QMessageBox>
+#include <string>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "qgeomap.h"
 #include "mapwidget.h"
 #include "dialog.h"
-#include <QMessageBox>
-#include <QFileDialog>
-#include <string>
 using namespace std;
 
-MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow)
+MainWindow::MainWindow() : ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
-    path = "/";
 }
 
 MainWindow::~MainWindow()
@@ -31,9 +29,11 @@ void MainWindow::on_openFileButton_clicked()
     if (fileName.section('.', -1) == "e00")
     {
         // 读取文件并解码
-        QGeoMap *map = new QGeoMap(this);
+        map = new QGeoMap(this);
         if (map->loadMap(fileName.toStdString()))
         {
+            hasMap = true;
+
             // 更新标题栏文字
             this->setWindowTitle(fileName.section('/', -1) + " - Navigator++");
 
@@ -45,6 +45,9 @@ void MainWindow::on_openFileButton_clicked()
         }
         else
         {
+            hasMap = false;
+
+            // 释放无用内存
             delete map;
         }
     }
@@ -56,6 +59,13 @@ void MainWindow::on_openFileButton_clicked()
 
 void MainWindow::on_analyzeButton_clicked()
 {
-    Dialog dialog;
-    dialog.exec();
+    if (hasMap)
+    {
+        Dialog dialog(map);
+        dialog.exec();
+    }
+    else
+    {
+        QMessageBox::information(this, "Notice", "Please open a file first", QMessageBox::Yes);
+    }
 }
