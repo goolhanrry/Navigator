@@ -2,7 +2,6 @@
 #include <QMessageBox>
 #include <fstream>
 #include <sstream>
-#include <iostream>
 using namespace std;
 
 QGeoMap::QGeoMap(QWidget *parent)

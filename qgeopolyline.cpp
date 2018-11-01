@@ -1,5 +1,4 @@
 #include "qgeopolyline.h"
-#include <iostream>
 
 QGeoPolyline::QGeoPolyline(string index, int size)
 {

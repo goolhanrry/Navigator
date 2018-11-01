@@ -2,7 +2,6 @@
 #include "ui_mainwindow.h"
 #include "qgeomap.h"
 #include "mapwidget.h"
-#include <iostream>
 #include <QMessageBox>
 #include <QFileDialog>
 #include <string>
