@@ -28,8 +28,11 @@ void MainWindow::on_openFileButton_clicked()
     // 文件格式校验
     if (fileName.section('.', -1) == "e00")
     {
-        // 读取文件并解码
+        // 建立信号和槽的连接
         map = new QGeoMap(this);
+        connect(map, SIGNAL(pathUpdated(QString)), this, SLOT(on_pathUpdated(QString)));
+
+        // 读取文件并解码
         if (map->loadMap(fileName.toStdString()))
         {
             hasMap = true;
@@ -69,4 +72,9 @@ void MainWindow::on_analyzeButton_clicked()
     {
         QMessageBox::information(this, "Notice", "Please open a map first", QMessageBox::Ok);
     }
+}
+
+void MainWindow::on_pathUpdated(QString path)
+{
+    ui->pathLabel->setText(path);
 }

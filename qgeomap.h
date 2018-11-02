@@ -22,8 +22,10 @@ struct Node
   }
 };
 
-class QGeoMap
+class QGeoMap : public QObject
 {
+  Q_OBJECT
+
 public:
   explicit QGeoMap(QWidget *parent);
   ~QGeoMap();
@@ -44,6 +46,9 @@ private:
   bool getAdjacentNode(int &currentNode, int TNode, int &count);
 
   QWidget *parent; // 指向父窗体的指针，用于捕获到异常时弹窗提示
+
+signals:
+  void pathUpdated(QString path);
 };
 
 #endif // QGEOMAP_H

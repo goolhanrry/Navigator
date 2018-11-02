@@ -1,6 +1,5 @@
 #include <QMessageBox>
 #include <math.h>
-#include <iostream>
 #include "qgeomap.h"
 
 QGeoMap::QGeoMap(QWidget *parent)
@@ -157,8 +156,11 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
  *************************************************/
 void QGeoMap::searchPath(int FNode, int TNode)
 {
-    // 添加起始结点
     int index, currentNode = FNode;
+    string node, path = "Path: ";
+    stringstream stream;
+
+    // 添加起始结点
     closedList.push_back(currentNode);
 
     while (true)
@@ -166,14 +168,25 @@ void QGeoMap::searchPath(int FNode, int TNode)
         // 检索相邻结点
         if (getAdjacentNode(currentNode, TNode, index))
         {
-            cout << currentNode << endl;
-
             // 沿最小 F 值移动
             closedList.push_back(currentNode);
 
             // 到达目标结点
             if (currentNode == TNode)
             {
+                // 拼接路径
+                for (int item : closedList)
+                {
+                    stream << item;
+                    stream >> node;
+                    path += node + " -> ";
+
+                    stream.clear();
+                }
+
+                // 出发路径更新信号
+                emit pathUpdated(QString::fromStdString(path.substr(0, path.length() - 4)));
+
                 break;
             }
         }

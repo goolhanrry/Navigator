@@ -21,6 +21,7 @@ public:
 private slots:
   void on_openFileButton_clicked();
   void on_analyzeButton_clicked();
+  void on_pathUpdated(QString path);
 
 private:
   Ui::MainWindow *ui;

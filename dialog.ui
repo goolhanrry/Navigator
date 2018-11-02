@@ -24,13 +24,13 @@
   </property>
   <layout class="QGridLayout" name="gridLayout">
    <property name="leftMargin">
-    <number>24</number>
+    <number>22</number>
    </property>
    <property name="topMargin">
     <number>12</number>
    </property>
    <property name="rightMargin">
-    <number>24</number>
+    <number>22</number>
    </property>
    <property name="bottomMargin">
     <number>10</number>
