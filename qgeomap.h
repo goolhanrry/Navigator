@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <map>
+#include <set>
 #include "qgeopoint.h"
 #include "qgeopolyline.h"
 using namespace std;
@@ -18,14 +19,19 @@ public:
   ~QGeoMap();
 
   bool loadMap(string fileName);
-  void getShortestPath(int FNode, int TNode);
+  void searchPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline;
-  map<int, QGeoPoint> nodeList; // 结点列表
-  float maxX, minX, maxY, minY; // 地图边界坐标
+  map<int, QGeoPoint> nodeList;         // 总结点列表
+  map<int, float> openList;               // 相邻结点列表
+  set<int> closedList;                  // 已检测结点列表
+  float maxX, minX, maxY, minY, length; // 地图边界坐标, 路径总长度
 
 protected:
   void switchFile(ifstream *fs, string fileName, int fileIndex);
+
+private:
+  void getAdjacentNode(int currentNode, int TNode);
 
   QWidget *parent; // 指向父窗体的指针，用于捕获到异常时弹窗提示
 };

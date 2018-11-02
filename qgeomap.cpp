@@ -1,8 +1,6 @@
 #include <QMessageBox>
-#include <fstream>
-#include <sstream>
+#include <math.h>
 #include "qgeomap.h"
-using namespace std;
 
 QGeoMap::QGeoMap(QWidget *parent)
 {
@@ -86,12 +84,12 @@ bool QGeoMap::loadMap(string fileName)
                 maxY = (firstPoint || y > maxY) ? y : maxY;
                 minY = (firstPoint || y < minY) ? y : minY;
 
+                firstPoint = false;
+
                 if (!i)
                 {
                     // 添加结点
                     nodeList[FNode] = QGeoPoint(x, y);
-
-                    firstPoint = false;
                 }
 
                 newPolyline->addPoint(x, y);
@@ -152,12 +150,40 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 }
 
 /*************************************************
- *  @brief 使用A星算法进行最短路径分析
+ *  @brief 使用A星算法进行路径分析
  *  @param FNode   起始结点
  *  @param TNode   目标结点
  *************************************************/
-void QGeoMap::getShortestPath(int FNode, int TNode)
+void QGeoMap::searchPath(int FNode, int TNode)
 {
     // 添加起始结点
-    //closedList.push_back(FNode);
+    closedList.insert(FNode);
+
+    getAdjacentNode(FNode, TNode);
+}
+
+/*************************************************
+ *  @brief 获取相邻结点及其 F 值
+ *  @param currentNode  当前结点
+ *  @param TNode        目标结点
+ *************************************************/
+void QGeoMap::getAdjacentNode(int currentNode, int TNode)
+{
+    float tx = nodeList.at(TNode).x;
+    float ty = nodeList.at(TNode).y;
+
+    for (QGeoPolyline *item : polyline)
+    {
+        if (item->FNode == currentNode)
+        {
+            // F (移动总耗费) = G (从起点到该点的移动量) + H (从该点到终点的预估移动量)
+            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->FNode).x, 2) + pow(ty - nodeList.at(item->FNode).y, 2));
+            openList[item->TNode] = F;
+        }
+        else if (item->TNode == currentNode)
+        {
+            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
+            openList[item->FNode] = F;
+        }
+    }
 }

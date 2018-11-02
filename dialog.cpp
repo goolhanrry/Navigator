@@ -44,9 +44,9 @@ void Dialog::on_buttonBox_accepted()
     }
 
     // 清除结点列表
-    //map->openList.clear();
-    //map->closedList.clear();
+    map->openList.clear();
+    map->closedList.clear();
 
     // 执行最短路径分析
-    //map->getShortestPath(FNode, TNode);
+    map->searchPath(FNode, TNode);
 }
