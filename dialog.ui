@@ -33,7 +33,7 @@
     <number>24</number>
    </property>
    <property name="bottomMargin">
-    <number>6</number>
+    <number>10</number>
    </property>
    <item row="4" column="0">
     <widget class="QLabel" name="TNodeLabel">

@@ -7,11 +7,7 @@ QGeoPolyline::QGeoPolyline(int index, int FNode, int TNode, int size)
     this->FNode = FNode;
     this->TNode = TNode;
     this->size = size;
-
-    // 为点要素申请内存并设置首尾结点索引
     pts = new QGeoPoint[size];
-    pts[0].setIndex(FNode);
-    pts[size - 1].setIndex(TNode);
 }
 
 QGeoPolyline::~QGeoPolyline()

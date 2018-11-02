@@ -1,7 +1,7 @@
-#include "qgeomap.h"
 #include <QMessageBox>
 #include <fstream>
 #include <sstream>
+#include "qgeomap.h"
 using namespace std;
 
 QGeoMap::QGeoMap(QWidget *parent)
@@ -86,12 +86,12 @@ bool QGeoMap::loadMap(string fileName)
                 maxY = (firstPoint || y > maxY) ? y : maxY;
                 minY = (firstPoint || y < minY) ? y : minY;
 
-                firstPoint = firstPoint ? false : firstPoint;
-
-                // 添加结点
                 if (!i)
                 {
-                    nodeList.insert(QGeoPoint(FNode, x, y));
+                    // 添加结点
+                    nodeList[FNode] = QGeoPoint(x, y);
+
+                    firstPoint = false;
                 }
 
                 newPolyline->addPoint(x, y);
@@ -104,7 +104,7 @@ bool QGeoMap::loadMap(string fileName)
             }
 
             // 添加结点
-            nodeList.insert(QGeoPoint(TNode, x, y));
+            nodeList[TNode] = QGeoPoint(x, y);
         }
 
         fs.close();

@@ -1,5 +1,5 @@
-#include "mapwidget.h"
 #include <glu.h>
+#include "mapwidget.h"
 using namespace std;
 
 MapWidget::MapWidget(QWidget *parent)

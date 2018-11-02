@@ -6,7 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
-#include <set>
+#include <map>
 #include "qgeopoint.h"
 #include "qgeopolyline.h"
 using namespace std;
@@ -21,7 +21,7 @@ public:
   void getShortestPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline;
-  set<QGeoPoint> nodeList;      // 结点列表
+  map<int, QGeoPoint> nodeList; // 结点列表
   float maxX, minX, maxY, minY; // 地图边界坐标
 
 protected:

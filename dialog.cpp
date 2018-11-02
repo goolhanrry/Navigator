@@ -33,7 +33,11 @@ void Dialog::on_buttonBox_accepted()
     int TNode = ui->TNodeLineEdit->text().toInt();
 
     // 输入合法性校验
-    if (FNode < 1 || TNode > maxNode || FNode < 1 || TNode > maxNode)
+    if (!FNode && !TNode)
+    {
+        return;
+    }
+    else if (!FNode || !TNode || FNode < 1 || TNode > maxNode || FNode < 1 || TNode > maxNode)
     {
         QMessageBox::critical(this, "Error", "Bad input", QMessageBox::Yes);
         return;
@@ -44,5 +48,5 @@ void Dialog::on_buttonBox_accepted()
     //map->closedList.clear();
 
     // 执行最短路径分析
-    //map->shortestPath(ui->FNodeLineEdit->text().toInt(), ui->TNodeLineEdit->text().toInt());
+    //map->getShortestPath(FNode, TNode);
 }
