@@ -7,10 +7,20 @@
 #include <fstream>
 #include <sstream>
 #include <map>
-#include <set>
 #include "qgeopoint.h"
 #include "qgeopolyline.h"
 using namespace std;
+
+struct Node
+{
+  int id, index; // 结点 ID, 结点索引
+  float F;       // 结点 F 值
+
+  bool operator==(const int id) const // 重载 == 操作符以实现查找功能
+  {
+    return this->id == id;
+  }
+};
 
 class QGeoMap
 {
@@ -22,16 +32,16 @@ public:
   void searchPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline;
-  map<int, QGeoPoint> nodeList;         // 总结点列表
-  map<int, float> openList;               // 相邻结点列表
-  set<int> closedList;                  // 已检测结点列表
+  map<int, QGeoPoint> nodeList;         // 总结点无序列表
+  vector<Node> openList;                // 相邻结点有序列表
+  vector<int> closedList;               // 已检测结点有序列表
   float maxX, minX, maxY, minY, length; // 地图边界坐标, 路径总长度
 
 protected:
   void switchFile(ifstream *fs, string fileName, int fileIndex);
 
 private:
-  void getAdjacentNode(int currentNode, int TNode);
+  bool getAdjacentNode(int &currentNode, int TNode, int &count);
 
   QWidget *parent; // 指向父窗体的指针，用于捕获到异常时弹窗提示
 };

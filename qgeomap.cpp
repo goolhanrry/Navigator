@@ -1,5 +1,6 @@
 #include <QMessageBox>
 #include <math.h>
+#include <iostream>
 #include "qgeomap.h"
 
 QGeoMap::QGeoMap(QWidget *parent)
@@ -86,9 +87,9 @@ bool QGeoMap::loadMap(string fileName)
 
                 firstPoint = false;
 
+                // 添加结点
                 if (!i)
                 {
-                    // 添加结点
                     nodeList[FNode] = QGeoPoint(x, y);
                 }
 
@@ -112,13 +113,13 @@ bool QGeoMap::loadMap(string fileName)
     catch (string fileName)
     {
         // 捕获文件读取异常，原因：找不到文件或文件编码错误
-        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile Missing or Bad Encoding", QMessageBox::Yes);
+        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile Missing or Bad Encoding", QMessageBox::Ok);
         return false;
     }
     catch (...)
     {
         // 捕获文件读取异常，原因：文件格式错误
-        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nBad Format", QMessageBox::Yes);
+        QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nBad Format", QMessageBox::Ok);
         return false;
     }
 }
@@ -157,33 +158,111 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 void QGeoMap::searchPath(int FNode, int TNode)
 {
     // 添加起始结点
-    closedList.insert(FNode);
+    int index, currentNode = FNode;
+    closedList.push_back(currentNode);
 
-    getAdjacentNode(FNode, TNode);
+    while (true)
+    {
+        // 检索相邻结点
+        if (getAdjacentNode(currentNode, TNode, index))
+        {
+            cout << currentNode << endl;
+
+            // 沿最小 F 值移动
+            closedList.push_back(currentNode);
+
+            // 到达目标结点
+            if (currentNode == TNode)
+            {
+                break;
+            }
+        }
+        else
+        {
+            QMessageBox::information(parent, "Notice", "Path not found", QMessageBox::Ok);
+            break;
+        }
+    }
 }
 
 /*************************************************
- *  @brief 获取相邻结点及其 F 值
+ *  @brief 检索相邻结点并返回最优邻接结点
  *  @param currentNode  当前结点
  *  @param TNode        目标结点
+ *  @return
+ *      -true   获取成功
+ *      -false  获取失败
  *************************************************/
-void QGeoMap::getAdjacentNode(int currentNode, int TNode)
+bool QGeoMap::getAdjacentNode(int &currentNode, int TNode, int &index)
 {
     float tx = nodeList.at(TNode).x;
     float ty = nodeList.at(TNode).y;
+    vector<int>::iterator iter;
+    vector<Node>::reverse_iterator r_iter;
 
     for (QGeoPolyline *item : polyline)
     {
         if (item->FNode == currentNode)
         {
-            // F (移动总耗费) = G (从起点到该点的移动量) + H (从该点到终点的预估移动量)
-            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->FNode).x, 2) + pow(ty - nodeList.at(item->FNode).y, 2));
-            openList[item->TNode] = F;
+            // F (移动总耗费) = G (从起点到该点的移动量) + H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
+            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
+
+            // 若该结点已在 closedList 中则跳过
+            iter = find(closedList.begin(), closedList.end(), item->TNode);
+            if (iter != closedList.end())
+            {
+                continue;
+            }
+
+            // 若为新结点则加入 openList
+            r_iter = find(openList.rbegin(), openList.rend(), item->TNode);
+            if (r_iter == openList.rend())
+            {
+                Node newAdjacentNode = {item->TNode, index, F};
+                openList.push_back(newAdjacentNode);
+            }
         }
         else if (item->TNode == currentNode)
         {
-            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
-            openList[item->FNode] = F;
+            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->FNode).x, 2) + pow(ty - nodeList.at(item->FNode).y, 2));
+
+            iter = find(closedList.begin(), closedList.end(), item->FNode);
+            if (iter != closedList.end())
+            {
+                continue;
+            }
+
+            r_iter = find(openList.rbegin(), openList.rend(), item->FNode);
+            if (r_iter == openList.rend())
+            {
+                Node newAdjacentNode = {item->FNode, index, F};
+                openList.push_back(newAdjacentNode);
+            }
         }
     }
+
+    // 若无可用结点则返回
+    if (openList.empty())
+    {
+        return false;
+    }
+
+    // 从 openList 中取出最优结点
+    vector<Node>::iterator node_iter, min_iter;
+    float minF = openList.front().F;
+
+    for (node_iter = openList.begin(); node_iter != openList.end(); ++node_iter)
+    {
+        if (node_iter->F <= minF)
+        {
+            minF = node_iter->F;
+            currentNode = node_iter->id;
+            min_iter = node_iter;
+        }
+    }
+
+    openList.erase(min_iter);
+    min_iter = openList.begin();
+
+    return true;
 }

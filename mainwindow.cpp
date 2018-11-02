@@ -53,12 +53,13 @@ void MainWindow::on_openFileButton_clicked()
     }
     else if (fileName.length())
     {
-        QMessageBox::critical(this, "Error", "Please choose a \".e00\" file", QMessageBox::Yes);
+        QMessageBox::critical(this, "Error", "Please choose a \".e00\" file", QMessageBox::Ok);
     }
 }
 
 void MainWindow::on_analyzeButton_clicked()
 {
+    // 检查是否已打开地图文件
     if (hasMap)
     {
         Dialog dialog(map);
@@ -66,6 +67,6 @@ void MainWindow::on_analyzeButton_clicked()
     }
     else
     {
-        QMessageBox::information(this, "Notice", "Please open a map first", QMessageBox::Yes);
+        QMessageBox::information(this, "Notice", "Please open a map first", QMessageBox::Ok);
     }
 }
