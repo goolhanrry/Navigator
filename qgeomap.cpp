@@ -24,7 +24,7 @@ QGeoMap::~QGeoMap()
 
 /*************************************************
  *  @brief 从 e00 文件中读取地图数据
- *  @param fileName  待读取的文件路径
+ *  @param fileName  待读取文件的路径
  *  @return
  *      -true   读取成功
  *      -false  读取失败
@@ -34,7 +34,7 @@ bool QGeoMap::loadMap(string fileName)
     string buffer;
     int index, FNode, TNode, LPoly, RPoly, size, fileIndex = 0;
     float x, y;
-    bool firstLine = true;
+    bool firstPoint = true;
 
     try
     {
@@ -72,7 +72,7 @@ bool QGeoMap::loadMap(string fileName)
             }
 
             // 为线要素分配内存
-            QGeoPolyline *newPolyline = new QGeoPolyline(index, size);
+            QGeoPolyline *newPolyline = new QGeoPolyline(index, FNode, TNode, size);
             polyline.push_back(newPolyline);
 
             // 逐点读取坐标
@@ -81,20 +81,17 @@ bool QGeoMap::loadMap(string fileName)
                 fs >> x >> y;
 
                 // 初始化边界
-                if (firstLine)
+                maxX = (firstPoint | x > maxX) ? x : maxX;
+                minX = (firstPoint | x < minX) ? x : minX;
+                maxY = (firstPoint | y > maxY) ? y : maxY;
+                minY = (firstPoint | y < minY) ? y : minY;
+
+                firstPoint = firstPoint ? false : firstPoint;
+
+                // 添加结点
+                if (!i)
                 {
-                    firstLine = false;
-                    maxX = x;
-                    minX = x;
-                    maxY = y;
-                    minY = y;
-                }
-                else
-                {
-                    maxX = x > maxX ? x : maxX;
-                    minX = x < minX ? x : minX;
-                    maxY = y > maxY ? y : maxY;
-                    minY = y < minY ? y : minY;
+                    nodeList.insert(QGeoPoint(FNode, x, y));
                 }
 
                 newPolyline->addPoint(x, y);
@@ -106,8 +103,8 @@ bool QGeoMap::loadMap(string fileName)
                 }
             }
 
-            // 添加首尾节点索引并生成折线长度
-            newPolyline->setNode(FNode, TNode);
+            // 添加结点
+            nodeList.insert(QGeoPoint(TNode, x, y));
         }
 
         fs.close();
@@ -156,11 +153,11 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 
 /*************************************************
  *  @brief 使用A星算法进行最短路径分析
- *  @param FNode   起始节点
- *  @param TNode   目标节点
+ *  @param FNode   起始结点
+ *  @param TNode   目标结点
  *************************************************/
-void QGeoMap::shortestPath(int FNode, int TNode)
+void QGeoMap::getShortestPath(int FNode, int TNode)
 {
-    // 添加起始节点
-    closedList.push_back(FNode);
+    // 添加起始结点
+    //closedList.push_back(FNode);
 }

@@ -18,10 +18,10 @@ Dialog::~Dialog()
 
 void Dialog::on_buttonBox_accepted()
 {
-    // 清除节点列表
-    map->openList.clear();
-    map->closedList.clear();
+    // 清除结点列表
+    //map->openList.clear();
+    //map->closedList.clear();
 
     // 执行最短路径分析
-    map->shortestPath(ui->FNodeLineEdit->text().toInt(), ui->TNodeLineEdit->text().toInt());
+    //map->shortestPath(ui->FNodeLineEdit->text().toInt(), ui->TNodeLineEdit->text().toInt());
 }

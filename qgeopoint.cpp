@@ -2,6 +2,13 @@
 
 QGeoPoint::QGeoPoint() {}
 
+QGeoPoint::QGeoPoint(int index, float x, float y)
+{
+    this->index = index;
+    this->x = x;
+    this->y = y;
+}
+
 /*************************************************
  *  @brief 设置点要素的索引
  *  @param index 索引值
@@ -20,4 +27,9 @@ void QGeoPoint::setCoordinate(float x, float y)
 {
     this->x = x;
     this->y = y;
+}
+
+bool QGeoPoint::operator<(const QGeoPoint &p) const
+{
+    return this->index < p.index;
 }

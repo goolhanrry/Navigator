@@ -6,6 +6,7 @@
 #include <vector>
 #include <fstream>
 #include <sstream>
+#include <set>
 #include "qgeopoint.h"
 #include "qgeopolyline.h"
 using namespace std;
@@ -17,12 +18,11 @@ public:
   ~QGeoMap();
 
   bool loadMap(string fileName);
-  void shortestPath(int FNode, int TNode);
+  void getShortestPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline;
-  vector<QGeoPoint *> nodeList;
-  vector<int> openList, closedList; // 节点索引列表
-  float maxX, minX, maxY, minY;     // 地图边界坐标
+  set<QGeoPoint> nodeList;      // 结点列表
+  float maxX, minX, maxY, minY; // 地图边界坐标
 
 protected:
   void switchFile(ifstream *fs, string fileName, int fileIndex);

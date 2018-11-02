@@ -66,6 +66,6 @@ void MainWindow::on_analyzeButton_clicked()
     }
     else
     {
-        QMessageBox::information(this, "Notice", "Please open a file first", QMessageBox::Yes);
+        QMessageBox::information(this, "Notice", "Please open a map first", QMessageBox::Yes);
     }
 }

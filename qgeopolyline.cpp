@@ -1,11 +1,17 @@
 #include <math.h>
 #include "qgeopolyline.h"
 
-QGeoPolyline::QGeoPolyline(int index, int size)
+QGeoPolyline::QGeoPolyline(int index, int FNode, int TNode, int size)
 {
     this->index = index;
+    this->FNode = FNode;
+    this->TNode = TNode;
     this->size = size;
+
+    // 为点要素申请内存并设置首尾结点索引
     pts = new QGeoPoint[size];
+    pts[0].setIndex(FNode);
+    pts[size - 1].setIndex(TNode);
 }
 
 QGeoPolyline::~QGeoPolyline()
@@ -16,33 +22,17 @@ QGeoPolyline::~QGeoPolyline()
 }
 
 /*************************************************
- *  @brief 添加点要素
+ *  @brief 添加点要素并更新折线长度
  *  @param x  横坐标
  *  @param y  纵坐标
  *************************************************/
 void QGeoPolyline::addPoint(float x, float y)
 {
-    // 若数组已满则返回
-    if (count >= size)
-    {
-        return;
-    }
-
     pts[count].setCoordinate(x, y);
     count++;
-}
 
-/*************************************************
- *  @brief 添加首尾节点索引并生成折线长度
- *  @param FNode  首节点 ID
- *  @param TNode  尾节点 ID
- *************************************************/
-void QGeoPolyline::setNode(int FNode, int TNode)
-{
-    // 添加首尾节点索引
-    pts[0].setIndex(FNode);
-    pts[size - 1].setIndex(TNode);
-
-    // 计算折线长度
-
+    if (count > 1)
+    {
+        length += sqrt(pow(pts[count - 2].x - x, 2) + pow(pts[count - 2].y - y, 2));
+    }
 }
