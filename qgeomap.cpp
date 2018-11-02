@@ -48,7 +48,7 @@ bool QGeoMap::loadMap(string fileName)
         }
 
         // 将文件读取指针定位到线要素
-        while (buffer != "ARC  2" & buffer != "ARC  3")
+        while (buffer != "ARC  2" && buffer != "ARC  3")
         {
             getline(fs, buffer);
         }
@@ -81,10 +81,10 @@ bool QGeoMap::loadMap(string fileName)
                 fs >> x >> y;
 
                 // 初始化边界
-                maxX = (firstPoint | x > maxX) ? x : maxX;
-                minX = (firstPoint | x < minX) ? x : minX;
-                maxY = (firstPoint | y > maxY) ? y : maxY;
-                minY = (firstPoint | y < minY) ? y : minY;
+                maxX = (firstPoint || x > maxX) ? x : maxX;
+                minX = (firstPoint || x < minX) ? x : minX;
+                maxY = (firstPoint || y > maxY) ? y : maxY;
+                minY = (firstPoint || y < minY) ? y : minY;
 
                 firstPoint = firstPoint ? false : firstPoint;
 

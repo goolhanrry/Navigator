@@ -25,7 +25,7 @@ private slots:
 private:
   Ui::MainWindow *ui;
   QGeoMap *map;
-  QString path = "/"; // 上次打开文件的路径
+  QString path = "/";  // 上次打开文件的路径
   bool hasMap = false; // 是否已打开地图文件
 };
 
