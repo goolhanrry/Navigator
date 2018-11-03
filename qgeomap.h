@@ -10,12 +10,18 @@ using namespace std;
 
 struct Node
 {
-  int id, index; // 结点 ID, 结点索引
-  float F;       // 结点 F 值
+  int id, index, polylineId; // 结点 ID, 结点索引, 折线 ID
+  float F;                   // 结点 F 值
 
-  bool operator==(const int id) const // 重载 == 操作符以实现查找功能
+  // 重载 == 操作符以实现查找功能
+  bool operator==(const int &id) const
   {
     return this->id == id;
+  }
+
+  bool operator==(const pair<int, int> &node) const
+  {
+    return (this->id == node.first && this->polylineId == node.second);
   }
 };
 
@@ -32,8 +38,7 @@ public:
 
   vector<QGeoPolyline *> polyline, highlightPolyline;
   map<int, QGeoPoint> nodeList;         // 总结点无序列表
-  vector<Node> openList;                // 相邻结点有序列表
-  vector<int> closedList;               // 已检测结点有序列表
+  vector<Node> openList, closedList;    // 相邻结点与已检测结点有序列表
   float maxX, minX, maxY, minY, length; // 地图边界坐标, 路径总长度
 
 protected:
@@ -41,7 +46,7 @@ protected:
 
 private:
   bool getAdjacentNode(int TNode, int &count);
-  void getNearestNode();
+  void getNearestNode(int &index);
   void generatePath();
 
   QWidget *parent; // 指向父窗体的指针，用于捕获到异常时弹窗提示

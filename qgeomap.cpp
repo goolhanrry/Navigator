@@ -158,12 +158,13 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
  ****************************************************/
 void QGeoMap::searchPath(int FNode, int TNode)
 {
-    int index;
+    int index = 1;
     string node, path = "Path: ";
     stringstream stream;
 
     // 添加起始结点
-    closedList.push_back(FNode);
+    Node fNode = {FNode, 0};
+    closedList.push_back(fNode);
 
     while (true)
     {
@@ -171,7 +172,7 @@ void QGeoMap::searchPath(int FNode, int TNode)
         if (getAdjacentNode(TNode, index))
         {
             // 获取最优结点并移动一步
-            getNearestNode();
+            getNearestNode(index);
 
             // 到达目标结点
             if (closedList.back() == TNode)
@@ -180,15 +181,15 @@ void QGeoMap::searchPath(int FNode, int TNode)
                 generatePath();
 
                 // 拼接路径字符串
-                for (int item : closedList)
+                for (Node item : closedList)
                 {
-                    stream << item;
+                    stream << item.id;
                     stream >> node;
                     path += node + " -> ";
                     stream.clear();
                 }
 
-                // 出发路径更新信号
+                // 触发路径更新信号
                 emit pathUpdated(QString::fromStdString(path.substr(0, path.length() - 4)));
 
                 break;
@@ -214,51 +215,49 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
 {
     float tx = nodeList.at(TNode).x;
     float ty = nodeList.at(TNode).y;
-    vector<int>::const_iterator iter; // 使用 const_iterator 以保证数据安全
-    vector<Node>::const_reverse_iterator r_iter;
+    vector<Node>::const_reverse_iterator r_iter; // 使用静态反向迭代器保证数据安全及检索效率
 
     for (QGeoPolyline *item : polyline)
     {
-        if (item->FNode == closedList.back())
+        if (closedList.back() == item->FNode)
         {
-            // F (移动总耗费) = G (从起点到该点的移动量) + H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
-            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
-
             // 若该结点已在 closedList 中则跳过
-            iter = find(closedList.begin(), closedList.end(), item->TNode);
-            if (iter != closedList.end())
+            r_iter = find(closedList.rbegin(), closedList.rend(), item->TNode);
+            if (r_iter != closedList.rend())
             {
                 continue;
             }
 
+            // F (移动总耗费) = G (从起点到该点的移动量) + H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
+            float F = length + item->length + 2 * sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
+
             // 若为新结点则加入 openList
-            r_iter = find(openList.rbegin(), openList.rend(), item->TNode);
+            r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->TNode, item->index));
             if (r_iter == openList.rend())
             {
-                Node newAdjacentNode = {item->TNode, index, F};
+                Node newAdjacentNode = {item->TNode, index, item->index, F};
                 openList.push_back(newAdjacentNode);
             }
         }
-        else if (item->TNode == closedList.back())
-        {
-            float F = length + item->length + sqrt(pow(tx - nodeList.at(item->FNode).x, 2) + pow(ty - nodeList.at(item->FNode).y, 2));
 
-            iter = find(closedList.begin(), closedList.end(), item->FNode);
-            if (iter != closedList.end())
+        if (closedList.back() == item->TNode)
+        {
+            r_iter = find(closedList.rbegin(), closedList.rend(), item->FNode);
+            if (r_iter != closedList.rend())
             {
                 continue;
             }
 
-            r_iter = find(openList.rbegin(), openList.rend(), item->FNode);
+            float F = length + item->length + 2 * sqrt(pow(tx - nodeList.at(item->FNode).x, 2) + pow(ty - nodeList.at(item->FNode).y, 2));
+
+            r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->FNode, item->index));
             if (r_iter == openList.rend())
             {
-                Node newAdjacentNode = {item->FNode, index, F};
+                Node newAdjacentNode = {item->FNode, index, item->index, F};
                 openList.push_back(newAdjacentNode);
             }
         }
     }
-
-    index++;
 
     // 若无可用结点则返回
     if (openList.empty())
@@ -272,28 +271,39 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
 /****************************************************
  *  @brief 获取最优结点并移动一步
  ****************************************************/
-void QGeoMap::getNearestNode()
+void QGeoMap::getNearestNode(int &index)
 {
     // 获取最优结点
-    int nextNode;
+    Node nextNode = {0, index};
     float minF = openList.front().F;
-    vector<Node>::const_iterator node_iter, min_iter;
+    vector<Node>::const_iterator iter, min_iter;
 
-    for (node_iter = openList.begin(); node_iter != openList.end(); ++node_iter)
+    for (iter = openList.begin(); iter != openList.end(); ++iter)
     {
-        if (node_iter->F <= minF)
+        if (iter->F <= minF)
         {
-            minF = node_iter->F;
-            nextNode = node_iter->id;
-            min_iter = node_iter;
+            minF = iter->F;
+            nextNode.id = iter->id;
+            min_iter = iter;
         }
     }
 
+    // 覆盖已有路径
+    if (min_iter->index < index)
+    {
+        while (closedList.back().index >= min_iter->index)
+        {
+            closedList.pop_back();
+        }
+    }
+
+    // 沿最小 F 值移动
     openList.erase(min_iter);
     min_iter = openList.begin();
 
-    // 沿最小 F 值移动
     closedList.push_back(nextNode);
+
+    index++;
 }
 
 /****************************************************
@@ -301,14 +311,33 @@ void QGeoMap::getNearestNode()
  ****************************************************/
 void QGeoMap::generatePath()
 {
+    vector<QGeoPolyline *> path;
+    QGeoPolyline *shortestPath;
+
     for (int i = 0; i <= closedList.size() - 2; i++)
     {
+        path.clear();
+
+        // 检索可能路径
         for (QGeoPolyline *item : polyline)
         {
-            if ((item->FNode == closedList.at(i) && item->TNode == closedList.at(i + 1)) || (item->TNode == closedList.at(i) && item->FNode == closedList.at(i + 1)))
+            if ((closedList.at(i) == item->FNode && closedList.at(i + 1) == item->TNode) || (closedList.at(i) == item->TNode && closedList.at(i + 1) == item->FNode))
             {
-                highlightPolyline.push_back(item);
+                path.push_back(item);
             }
         }
+
+        // 计算最短路径
+        shortestPath = path.front();
+
+        for (QGeoPolyline *item : path)
+        {
+            if (item->length < shortestPath->length)
+            {
+                shortestPath = item;
+            }
+        }
+
+        highlightPolyline.push_back(shortestPath);
     }
 }
