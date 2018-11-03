@@ -10,6 +10,7 @@ using namespace std;
 MainWindow::MainWindow() : ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    elidfont = new QFontMetrics(ui->pathLabel->font());
 }
 
 MainWindow::~MainWindow()
@@ -17,13 +18,19 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
+void MainWindow::resizeEvent(QResizeEvent *size)
+{
+    // 启用省略模式输出路径
+    ui->pathLabel->setText(elidfont->elidedText(path, Qt::ElideMiddle, ui->pathLabel->width()));
+}
+
 void MainWindow::on_openFileButton_clicked()
 {
     // 打开模式对话框，选择文件
-    QString fileName = QFileDialog::getOpenFileName(this, "Open File", path, "*.e00");
+    QString fileName = QFileDialog::getOpenFileName(this, "Open File", filePath, "*.e00");
 
     // 保存上次打开的目录
-    path = fileName.section('/', -2);
+    filePath = fileName.section('/', -2);
 
     // 文件格式校验
     if (fileName.section('.', -1) == "e00")
@@ -76,5 +83,9 @@ void MainWindow::on_analyzeButton_clicked()
 
 void MainWindow::on_pathUpdated(QString path)
 {
-    ui->pathLabel->setText(path);
+    // 更新要输出的路径
+    this->path = path;
+
+    // 启用省略模式输出路径
+    ui->pathLabel->setText(elidfont->elidedText(path, Qt::ElideMiddle, ui->pathLabel->width()));
 }
