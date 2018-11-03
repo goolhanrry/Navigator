@@ -10,7 +10,7 @@ MapWidget::MapWidget(QWidget *parent)
 
 MapWidget::~MapWidget()
 {
-    // 指向 MainWindow 的指针置空，其内存交由系统释放
+    // 指向 centralWidget 的指针置空，其内存交由系统释放
     parent = nullptr;
 }
 
@@ -21,8 +21,6 @@ void MapWidget::initializeGL()
 
     // 全局背景色
     glClearColor(0.13f, 0.15f, 0.18f, 0);
-    // 画笔颜色
-    glColor3f(1, 0.8f, 0);
 }
 
 void MapWidget::resizeGL(int width, int height)
@@ -32,6 +30,12 @@ void MapWidget::resizeGL(int width, int height)
 
 void MapWidget::paintGL()
 {
+    // 若无地图对象则返回
+    if (map == nullptr)
+    {
+        return;
+    }
+
     // 清空画布
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -43,7 +47,8 @@ void MapWidget::paintGL()
     // 绘制图形
     if (this->width() * dY >= this->height() * dX)
     {
-        for (QGeoPolyline *item : polyline)
+        glColor3f(1, 0.8f, 0);
+        for (QGeoPolyline *item : map->polyline)
         {
             glBegin(GL_LINE_STRIP);
             for (int i = 0; i < item->size; i++)
@@ -52,10 +57,25 @@ void MapWidget::paintGL()
             }
             glEnd();
         }
+
+        if (!map->highlightPolyline.empty())
+        {
+            glColor3f(0, 1, 0.78f);
+            for (QGeoPolyline *item : map->highlightPolyline)
+            {
+                glBegin(GL_LINE_STRIP);
+                for (int i = 0; i < item->size; i++)
+                {
+                    glVertex2f(2 * scale * (item->pts[i].x - mX) * this->height() / (dY * this->width()), 2 * scale * (item->pts[i].y - mY) / dY);
+                }
+                glEnd();
+            }
+        }
     }
     else
     {
-        for (QGeoPolyline *item : polyline)
+        glColor3f(1, 0.8f, 0);
+        for (QGeoPolyline *item : map->polyline)
         {
             glBegin(GL_LINE_STRIP);
             for (int i = 0; i < item->size; i++)
@@ -64,36 +84,41 @@ void MapWidget::paintGL()
             }
             glEnd();
         }
+
+        if (!map->highlightPolyline.empty())
+        {
+            glColor3f(0, 1, 0.78f);
+            for (QGeoPolyline *item : map->highlightPolyline)
+            {
+                glBegin(GL_LINE_STRIP);
+                for (int i = 0; i < item->size; i++)
+                {
+                    glVertex2f(2 * scale * (item->pts[i].x - mX) / dX, 2 * scale * (item->pts[i].y - mY) * this->width() / (dX * this->height()));
+                }
+                glEnd();
+            }
+        }
     }
 }
 
-/*************************************************
- *  @brief 设置 QOpenGLWidget 组件绘图所需的数据
- *  @param polyline   要绘制的折线指针集合
- *************************************************/
-void MapWidget::setPolyline(vector<QGeoPolyline *> polyline)
+/****************************************************
+ *  @brief 设置 QOpenGLWidget 组件要绘制的地图
+ *  @param map     指向 QGeoMap 类的指针
+ ****************************************************/
+void MapWidget::setMap(QGeoMap *map)
 {
-    this->polyline = polyline;
+    this->map = map;
+
+    // 绘图数据初始化
+    dX = map->maxX - map->minX;
+    dY = map->maxY - map->minY;
+    mX = dX / 2 + map->minX;
+    mY = dY / 2 + map->minY;
 }
 
-/*************************************************
- *  @brief 预处理待绘制图像的边界
- *  @param maxX     右边界
- *  @param minX     左边界
- *  @param maxY     上边界
- *  @param minY     下边界
- *************************************************/
-void MapWidget::setBoundary(float maxX, float minX, float maxY, float minY)
-{
-    dX = maxX - minX;
-    dY = maxY - minY;
-    mX = dX / 2 + minX;
-    mY = dY / 2 + minY;
-}
-
-/*************************************************
+/****************************************************
  *  @brief 恢复图像偏移量和缩放比例
- *************************************************/
+ ****************************************************/
 void MapWidget::resetOffset()
 {
     offsetX = 0;

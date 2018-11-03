@@ -33,7 +33,7 @@ public:
   bool loadMap(string fileName);
   void searchPath(int FNode, int TNode);
 
-  vector<QGeoPolyline *> polyline;
+  vector<QGeoPolyline *> polyline, highlightPolyline;
   map<int, QGeoPoint> nodeList;         // 总结点无序列表
   vector<Node> openList;                // 相邻结点有序列表
   vector<int> closedList;               // 已检测结点有序列表
@@ -43,7 +43,9 @@ protected:
   void switchFile(ifstream *fs, string fileName, int fileIndex);
 
 private:
-  bool getAdjacentNode(int &currentNode, int TNode, int &count);
+  bool getAdjacentNode(int TNode, int &count);
+  void getNearestNode();
+  void generatePath();
 
   QWidget *parent; // 指向父窗体的指针，用于捕获到异常时弹窗提示
 

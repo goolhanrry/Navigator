@@ -42,23 +42,23 @@ void MainWindow::on_openFileButton_clicked()
         // 读取文件并解码
         if (map->loadMap(fileName.toStdString()))
         {
-            hasMap = true;
-
             // 更新标题栏文字
             this->setWindowTitle(fileName.section('/', -1) + " - Navigator++");
 
+            // 清除路径
+            path.clear();
+            ui->pathLabel->setText("");
+
             // 渲染图形
-            ui->mapWidget->setPolyline(map->polyline);
-            ui->mapWidget->setBoundary(map->maxX, map->minX, map->maxY, map->minY);
+            ui->mapWidget->setMap(map);
             ui->mapWidget->resetOffset();
             ui->mapWidget->update();
         }
         else
         {
-            hasMap = false;
-
             // 释放无用内存
             delete map;
+            map = nullptr;
         }
     }
     else if (fileName.length())
@@ -70,7 +70,7 @@ void MainWindow::on_openFileButton_clicked()
 void MainWindow::on_analyzeButton_clicked()
 {
     // 检查是否已打开地图文件
-    if (hasMap)
+    if (map != nullptr)
     {
         Dialog dialog(map);
         dialog.exec();
@@ -88,4 +88,7 @@ void MainWindow::on_pathUpdated(QString path)
 
     // 启用省略模式输出路径
     ui->pathLabel->setText(elidfont->elidedText(path, Qt::ElideMiddle, ui->pathLabel->width()));
+
+    // 绘制路径
+    ui->mapWidget->update();
 }
