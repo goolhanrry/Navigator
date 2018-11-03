@@ -1,9 +1,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
-#include <string>
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
-#include "mapwidget.h"
 #include "dialog.h"
 using namespace std;
 
@@ -83,10 +81,10 @@ void MainWindow::on_analyzeButton_clicked()
 
 void MainWindow::on_pathUpdated(QString path)
 {
-    // 更新要输出的路径
+    // 更新要输出的路径字符串
     this->path = path;
 
-    // 启用省略模式输出路径
+    // 启用省略模式输出路径字符串
     ui->pathLabel->setText(elidfont->elidedText(path, Qt::ElideMiddle, ui->pathLabel->width()));
 
     // 绘制路径

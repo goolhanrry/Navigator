@@ -2,10 +2,7 @@
 #define QGEOMAP_H
 
 #include <QtWidgets>
-#include <string>
 #include <vector>
-#include <fstream>
-#include <sstream>
 #include <map>
 #include "qgeopoint.h"
 #include "qgeopolyline.h"

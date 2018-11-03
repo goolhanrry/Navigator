@@ -1,9 +1,7 @@
 #ifndef QGEOPOLYLINE_H
 #define QGEOPOLYLINE_H
 
-#include <string>
 #include "qgeopoint.h"
-using namespace std;
 
 class QGeoPolyline
 {
