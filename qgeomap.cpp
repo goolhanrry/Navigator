@@ -228,7 +228,7 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
                 continue;
             }
 
-            // F (移动总耗费) = G (从起点到该点的移动量) + H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
+            // F (移动总耗费) = G (从起点到该点的移动量) + 2 * H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
             float F = length + item->length + 2 * sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
 
             // 若为新结点则加入 openList
