@@ -1,4 +1,4 @@
-#ifndef QGEOPOINT_H
+﻿#ifndef QGEOPOINT_H
 #define QGEOPOINT_H
 
 class QGeoPoint

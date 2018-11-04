@@ -1,4 +1,4 @@
-#include <math.h>
+﻿#include <math.h>
 #include "qgeopolyline.h"
 
 QGeoPolyline::QGeoPolyline(int index, int FNode, int TNode, int size)

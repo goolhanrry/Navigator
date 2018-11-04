@@ -1,4 +1,4 @@
-#ifndef QGEOPOLYLINE_H
+﻿#ifndef QGEOPOLYLINE_H
 #define QGEOPOLYLINE_H
 
 #include "qgeopoint.h"

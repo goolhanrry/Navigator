@@ -1,10 +1,14 @@
-#include <QMessageBox>
+﻿#include <QMessageBox>
 #include <sstream>
 #include "dialog.h"
 #include "ui_dialog.h"
 
 Dialog::Dialog(QGeoMap *map) : ui(new Ui::Dialog)
 {
+    Qt::WindowFlags flags = Qt::Dialog;
+    flags |= Qt::WindowCloseButtonHint;
+    setWindowFlags(flags);
+
     stringstream stream;
     string maxNodeStr;
 

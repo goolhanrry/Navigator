@@ -1,4 +1,4 @@
-#ifndef QGEOMAP_H
+﻿#ifndef QGEOMAP_H
 #define QGEOMAP_H
 
 #include <QtWidgets>

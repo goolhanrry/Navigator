@@ -1,3 +1,4 @@
+﻿#include <glu.h>
 #include "mapwidget.h"
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "qgeopoint.h"
+﻿#include "qgeopoint.h"
 
 QGeoPoint::QGeoPoint() {}
 

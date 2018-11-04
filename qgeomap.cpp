@@ -1,4 +1,4 @@
-#include <QMessageBox>
+﻿#include <QMessageBox>
 #include <math.h>
 #include <fstream>
 #include <sstream>
