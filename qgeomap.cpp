@@ -229,7 +229,7 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
             }
 
             // F (移动总耗费) = G (从起点到该点的移动量) + 2 * H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
-            float F = length + item->length + 2 * sqrt(pow(tx - nodeList[item->TNode]->x, 2) + pow(ty - nodeList[item->TNode]->y, 2));
+            float F = length + item->length + 2 * (abs(tx - nodeList[item->TNode]->x) + abs(ty - nodeList[item->TNode]->y));
 
             // 若为新结点则加入 openList
             r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->TNode, item->index));
@@ -248,7 +248,7 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
                 continue;
             }
 
-            float F = length + item->length + 2 * sqrt(pow(tx - nodeList[item->FNode]->x, 2) + pow(ty - nodeList[item->FNode]->y, 2));
+            float F = length + item->length + 2 * (abs(tx - nodeList[item->FNode]->x) + abs(ty - nodeList[item->FNode]->y));
 
             r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->FNode, item->index));
             if (r_iter == openList.rend())
