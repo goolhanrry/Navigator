@@ -1,20 +1,20 @@
 ﻿#include <glu.h>
-#include "mapwidget.h"
+#include "qmapwidget.h"
 using namespace std;
 
-MapWidget::MapWidget(QWidget *parent)
+QMapWidget::QMapWidget(QWidget *parent)
 {
     this->parent = parent;
     cursor.setShape(Qt::OpenHandCursor);
 }
 
-MapWidget::~MapWidget()
+QMapWidget::~QMapWidget()
 {
     // 指向 centralWidget 的指针置空，其内存交由系统释放
     parent = nullptr;
 }
 
-void MapWidget::initializeGL()
+void QMapWidget::initializeGL()
 {
     // 初始化 OpenGL 函数
     initializeOpenGLFunctions();
@@ -23,12 +23,12 @@ void MapWidget::initializeGL()
     glClearColor(0.13f, 0.15f, 0.18f, 0);
 }
 
-void MapWidget::resizeGL(int width, int height)
+void QMapWidget::resizeGL(int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
-void MapWidget::paintGL()
+void QMapWidget::paintGL()
 {
     // 若无地图对象则返回
     if (map == nullptr)
@@ -105,7 +105,7 @@ void MapWidget::paintGL()
  *  @brief 设置 QOpenGLWidget 组件要绘制的地图
  *  @param map     指向 QGeoMap 类的指针
  ****************************************************/
-void MapWidget::setMap(QGeoMap *map)
+void QMapWidget::setMap(QGeoMap *map)
 {
     this->map = map;
 
@@ -119,7 +119,7 @@ void MapWidget::setMap(QGeoMap *map)
 /****************************************************
  *  @brief 恢复图像偏移量和缩放比例
  ****************************************************/
-void MapWidget::resetOffset()
+void QMapWidget::resetOffset()
 {
     offsetX = 0;
     offsetY = 0;
@@ -130,7 +130,7 @@ void MapWidget::resetOffset()
     scale = 0.9f;
 }
 
-void MapWidget::mousePressEvent(QMouseEvent *event)
+void QMapWidget::mousePressEvent(QMouseEvent *event)
 {
     // 判断是否按下左键
     if (event->buttons() == Qt::LeftButton)
@@ -144,7 +144,7 @@ void MapWidget::mousePressEvent(QMouseEvent *event)
     }
 }
 
-void MapWidget::mouseReleaseEvent(QMouseEvent *event)
+void QMapWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     // 恢复光标样式
     unsetCursor();
@@ -158,7 +158,7 @@ void MapWidget::mouseReleaseEvent(QMouseEvent *event)
     newOffsetY = 0;
 }
 
-void MapWidget::mouseMoveEvent(QMouseEvent *event)
+void QMapWidget::mouseMoveEvent(QMouseEvent *event)
 {
     // 判断是否按下左键
     if (event->buttons() == Qt::LeftButton)
@@ -172,7 +172,7 @@ void MapWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
-void MapWidget::wheelEvent(QWheelEvent *event)
+void QMapWidget::wheelEvent(QWheelEvent *event)
 {
     scale += 0.01 * event->delta();
 

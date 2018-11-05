@@ -29,7 +29,7 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="1" column="0" colspan="8">
-     <widget class="MapWidget" name="mapWidget" native="true"/>
+     <widget class="QMapWidget" name="mapWidget" native="true"/>
     </item>
     <item row="0" column="0">
      <widget class="QPushButton" name="openFileButton">
@@ -94,9 +94,9 @@
  <layoutdefault spacing="6" margin="11"/>
  <customwidgets>
   <customwidget>
-   <class>MapWidget</class>
+   <class>QMapWidget</class>
    <extends>QWidget</extends>
-   <header>mapwidget.h</header>
+   <header>qmapwidget.h</header>
    <container>1</container>
   </customwidget>
  </customwidgets>

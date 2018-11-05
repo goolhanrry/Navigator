@@ -33,7 +33,7 @@ SOURCES += \
         qgeomap.cpp \
     qgeopolyline.cpp \
     qgeopoint.cpp \
-    mapwidget.cpp \
+    qmapwidget.cpp \
     dialog.cpp
 
 HEADERS += \
@@ -41,7 +41,7 @@ HEADERS += \
         qgeomap.h \
     qgeopolyline.h \
     qgeopoint.h \
-    mapwidget.h \
+    qmapwidget.h \
     dialog.h
 
 FORMS += \

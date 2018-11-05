@@ -91,7 +91,7 @@ bool QGeoMap::loadMap(string fileName)
                 // 添加结点
                 if (!i)
                 {
-                    nodeList[FNode] = QGeoPoint(x, y);
+                    nodeList[FNode] = new QGeoPoint(x, y);
                 }
 
                 newPolyline->addPoint(x, y);
@@ -104,7 +104,7 @@ bool QGeoMap::loadMap(string fileName)
             }
 
             // 添加结点
-            nodeList[TNode] = QGeoPoint(x, y);
+            nodeList[TNode] = new QGeoPoint(x, y);
         }
 
         fs.close();
@@ -213,8 +213,8 @@ void QGeoMap::searchPath(int FNode, int TNode)
  ****************************************************/
 bool QGeoMap::getAdjacentNode(int TNode, int &index)
 {
-    float tx = nodeList.at(TNode).x;
-    float ty = nodeList.at(TNode).y;
+    float tx = nodeList[TNode]->x;
+    float ty = nodeList[TNode]->y;
     vector<Node>::const_reverse_iterator r_iter; // 使用静态反向迭代器保证数据安全及检索效率
 
     for (QGeoPolyline *item : polyline)
@@ -229,7 +229,7 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
             }
 
             // F (移动总耗费) = G (从起点到该点的移动量) + 2 * H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
-            float F = length + item->length + 2 * sqrt(pow(tx - nodeList.at(item->TNode).x, 2) + pow(ty - nodeList.at(item->TNode).y, 2));
+            float F = length + item->length + 2 * sqrt(pow(tx - nodeList[item->TNode]->x, 2) + pow(ty - nodeList[item->TNode]->y, 2));
 
             // 若为新结点则加入 openList
             r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->TNode, item->index));
@@ -248,7 +248,7 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
                 continue;
             }
 
-            float F = length + item->length + 2 * sqrt(pow(tx - nodeList.at(item->FNode).x, 2) + pow(ty - nodeList.at(item->FNode).y, 2));
+            float F = length + item->length + 2 * sqrt(pow(tx - nodeList[item->FNode]->x, 2) + pow(ty - nodeList[item->FNode]->y, 2));
 
             r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->FNode, item->index));
             if (r_iter == openList.rend())

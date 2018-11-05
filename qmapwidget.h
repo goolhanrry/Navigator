@@ -10,12 +10,13 @@
 #include "qgeomap.h"
 using namespace std;
 
-class MapWidget : public QOpenGLWidget, protected QOpenGLFunctions
+class QMapWidget : public QOpenGLWidget, protected QOpenGLFunctions
 {
   Q_OBJECT
+
 public:
-  explicit MapWidget(QWidget *parent = nullptr);
-  ~MapWidget() Q_DECL_OVERRIDE;
+  explicit QMapWidget(QWidget *parent = nullptr);
+  ~QMapWidget() Q_DECL_OVERRIDE;
 
   void initializeGL() Q_DECL_OVERRIDE;
   void resizeGL(int width, int height) Q_DECL_OVERRIDE;
