@@ -119,7 +119,7 @@ void QMapWidget::paintGL()
 
 /*************************************************
  *  @brief 设置 QOpenGLWidget 组件要绘制的地图
- *  @param map     指向 QGeoMap 类的指针
+ *  @param map    指向 QGeoMap 类的指针
  *************************************************/
 void QMapWidget::setMap(QGeoMap *map)
 {
