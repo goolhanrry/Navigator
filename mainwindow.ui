@@ -76,6 +76,11 @@
         <verstretch>0</verstretch>
        </sizepolicy>
       </property>
+      <property name="font">
+       <font>
+        <family>.SF NS Text</family>
+       </font>
+      </property>
       <property name="styleSheet">
        <string notr="true">color:#414141;</string>
       </property>
