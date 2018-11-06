@@ -3,11 +3,10 @@
 
 #include <QtWidgets>
 #include <vector>
-#include <ext/hash_map>
+#include <unordered_map>
 #include "qgeopoint.h"
 #include "qgeopolyline.h"
 using namespace std;
-using namespace __gnu_cxx;
 
 struct Node
 {
@@ -38,7 +37,7 @@ public:
   void searchPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline, highlightPolyline;
-  hash_map<int, QGeoPoint *> nodeList;  // 所有结点无序哈希表
+  unordered_map<int, QGeoPoint *> nodeList;  // 所有结点无序哈希表
   vector<Node> openList, closedList;    // 相邻结点与已检测结点有序列表
   float maxX, minX, maxY, minY, length; // 地图边界坐标, 路径总长度
 
