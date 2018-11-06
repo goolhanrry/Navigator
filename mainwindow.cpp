@@ -5,23 +5,36 @@
 #include "dialog.h"
 using namespace std;
 
+/*************************************************
+ *  @brief MainWindow 类的构造函数
+ *************************************************/
 MainWindow::MainWindow() : ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
     elidfont = new QFontMetrics(ui->pathLabel->font());
 }
 
+/*************************************************
+ *  @brief MainWindow 类的析构函数
+ *************************************************/
 MainWindow::~MainWindow()
 {
     delete ui;
 }
 
+/*************************************************
+ *  @brief 窗体大小改变事件
+ *  @param size 指向 QResizeEvent 的指针（无用）
+ *************************************************/
 void MainWindow::resizeEvent(QResizeEvent *size)
 {
     // 启用省略模式输出路径
     ui->pathLabel->setText(elidfont->elidedText(path, Qt::ElideMiddle, ui->pathLabel->width()));
 }
 
+/*************************************************
+ *  @brief 打开文件按钮点击事件
+ *************************************************/
 void MainWindow::on_openFileButton_clicked()
 {
     // 打开模式对话框，选择文件
@@ -65,6 +78,9 @@ void MainWindow::on_openFileButton_clicked()
     }
 }
 
+/*************************************************
+ *  @brief 路径分析按钮点击事件
+ *************************************************/
 void MainWindow::on_analyzeButton_clicked()
 {
     // 检查是否已打开地图文件
@@ -79,6 +95,10 @@ void MainWindow::on_analyzeButton_clicked()
     }
 }
 
+/*************************************************
+ *  @brief 路径更新事件
+ *  @param path 更新之后的路径字符串
+ *************************************************/
 void MainWindow::on_pathUpdated(QString path)
 {
     // 更新要输出的路径字符串

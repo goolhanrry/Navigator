@@ -3,6 +3,10 @@
 #include "dialog.h"
 #include "ui_dialog.h"
 
+/*************************************************
+ *  @brief Dialog 类的构造函数
+ *  @param map 指向 QGeoMap 对象的指针
+ *************************************************/
 Dialog::Dialog(QGeoMap *map) : ui(new Ui::Dialog)
 {
     Qt::WindowFlags flags = Qt::Dialog;
@@ -26,11 +30,17 @@ Dialog::Dialog(QGeoMap *map) : ui(new Ui::Dialog)
     ui->rangeLabel->setText("Please input node ID (1 ~ " + QString::fromStdString(maxNodeStr) + ")");
 }
 
+/*************************************************
+ *  @brief Dialog 类的析构函数
+ *************************************************/
 Dialog::~Dialog()
 {
     delete ui;
 }
 
+/*************************************************
+ *  @brief 按钮框点击事件
+ *************************************************/
 void Dialog::on_buttonBox_accepted()
 {
     int FNode = ui->FNodeLineEdit->text().toInt();

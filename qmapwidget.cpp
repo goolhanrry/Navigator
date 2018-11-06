@@ -2,18 +2,28 @@
 #include "qmapwidget.h"
 using namespace std;
 
+/*************************************************
+ *  @brief QMapWidget 类的构造函数
+ *  @param parent 指向父组件的指针
+ *************************************************/
 QMapWidget::QMapWidget(QWidget *parent)
 {
     this->parent = parent;
     cursor.setShape(Qt::OpenHandCursor);
 }
 
+/*************************************************
+ *  @brief QMapWidget 类的析构函数
+ *************************************************/
 QMapWidget::~QMapWidget()
 {
     // 指向 centralWidget 的指针置空，其内存交由系统释放
     parent = nullptr;
 }
 
+/*************************************************
+ *  @brief OpenGL 初始化事件
+ *************************************************/
 void QMapWidget::initializeGL()
 {
     // 初始化 OpenGL 函数
@@ -23,11 +33,17 @@ void QMapWidget::initializeGL()
     glClearColor(0.13f, 0.15f, 0.18f, 0);
 }
 
+/*************************************************
+ *  @brief QMapWidget 组件大小改变事件
+ *************************************************/
 void QMapWidget::resizeGL(int width, int height)
 {
     glViewport(0, 0, width, height);
 }
 
+/*************************************************
+ *  @brief QMapWidget 组件重绘事件
+ *************************************************/
 void QMapWidget::paintGL()
 {
     // 若无地图对象则返回
@@ -101,10 +117,10 @@ void QMapWidget::paintGL()
     }
 }
 
-/****************************************************
+/*************************************************
  *  @brief 设置 QOpenGLWidget 组件要绘制的地图
  *  @param map     指向 QGeoMap 类的指针
- ****************************************************/
+ *************************************************/
 void QMapWidget::setMap(QGeoMap *map)
 {
     this->map = map;
@@ -116,9 +132,9 @@ void QMapWidget::setMap(QGeoMap *map)
     mY = dY / 2 + map->minY;
 }
 
-/****************************************************
+/*************************************************
  *  @brief 恢复图像偏移量和缩放比例
- ****************************************************/
+ *************************************************/
 void QMapWidget::resetOffset()
 {
     offsetX = 0;
@@ -130,6 +146,9 @@ void QMapWidget::resetOffset()
     scale = 0.9f;
 }
 
+/*************************************************
+ *  @brief 鼠标按钮按下事件
+ *************************************************/
 void QMapWidget::mousePressEvent(QMouseEvent *event)
 {
     // 判断是否按下左键
@@ -144,6 +163,10 @@ void QMapWidget::mousePressEvent(QMouseEvent *event)
     }
 }
 
+/*************************************************
+ *  @brief 鼠标按钮松开事件
+ *  @param event 指向 QMouseEvent 对象的指针（无用）
+ *************************************************/
 void QMapWidget::mouseReleaseEvent(QMouseEvent *event)
 {
     // 恢复光标样式
@@ -158,6 +181,10 @@ void QMapWidget::mouseReleaseEvent(QMouseEvent *event)
     newOffsetY = 0;
 }
 
+/*************************************************
+ *  @brief 鼠标移动事件
+ *  @param event 指向 QMouseEvent 对象的指针
+ *************************************************/
 void QMapWidget::mouseMoveEvent(QMouseEvent *event)
 {
     // 判断是否按下左键
@@ -172,6 +199,10 @@ void QMapWidget::mouseMoveEvent(QMouseEvent *event)
     }
 }
 
+/*************************************************
+ *  @brief 鼠标滚轮事件
+ *  @param event 指向 QWheelEvent 对象的指针
+ *************************************************/
 void QMapWidget::wheelEvent(QWheelEvent *event)
 {
     scale += 0.01 * event->delta();

@@ -4,11 +4,18 @@
 #include <sstream>
 #include "qgeomap.h"
 
+/*************************************************
+ *  @brief QGeoMap 类的构造函数
+ *  @param parent 指向要弹窗的父组件的指针
+ *************************************************/
 QGeoMap::QGeoMap(QWidget *parent)
 {
     this->parent = parent;
 }
 
+/*************************************************
+ *  @brief QGeoMap 类的析构函数
+ *************************************************/
 QGeoMap::~QGeoMap()
 {
     // 指向 MainWindow 的指针置空，其内存交由系统释放
@@ -22,13 +29,13 @@ QGeoMap::~QGeoMap()
     }
 }
 
-/****************************************************
+/*************************************************
  *  @brief 从 e00 文件中读取地图数据
- *  @param fileName  待读取文件的路径
+ *  @param fileName 待读取文件的路径
  *  @return
  *      -true   读取成功
  *      -false  读取失败
- ****************************************************/
+ *************************************************/
 bool QGeoMap::loadMap(string fileName)
 {
     string buffer;
@@ -125,12 +132,12 @@ bool QGeoMap::loadMap(string fileName)
     }
 }
 
-/****************************************************
+/*************************************************
  *  @brief 切换待读取的文件以继续读取地图数据
  *  @param *fs       输入文件流的指针
  *  @param fileName       原文件路径
  *  @param fileIndex    当前文件索引
- ****************************************************/
+ *************************************************/
 void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
 {
     stringstream stream;
@@ -151,11 +158,11 @@ void QGeoMap::switchFile(ifstream *fs, string fileName, int fileIndex)
     }
 }
 
-/****************************************************
- *  @brief 使用A星算法进行路径分析
+/*************************************************
+ *  @brief 使用A*算法进行路径分析
  *  @param FNode   起始结点
  *  @param TNode   目标结点
- ****************************************************/
+ *************************************************/
 void QGeoMap::searchPath(int FNode, int TNode)
 {
     int index = 1;
@@ -169,49 +176,47 @@ void QGeoMap::searchPath(int FNode, int TNode)
     while (true)
     {
         // 检索相邻结点
-        if (getAdjacentNode(TNode, index))
-        {
-            // 获取最优结点并移动一步
-            getNearestNode(index);
+        getAdjacentNode(TNode, index);
 
-            // 到达目标结点
-            if (closedList.back() == TNode)
-            {
-                // 生成路径向量
-                generatePath();
-
-                // 拼接路径字符串
-                for (Node item : closedList)
-                {
-                    stream << item.id;
-                    stream >> node;
-                    path += node + " -> ";
-                    stream.clear();
-                }
-
-                // 触发路径更新信号
-                emit pathUpdated(QString::fromStdString(path.substr(0, path.length() - 4)));
-
-                break;
-            }
-        }
-        else
+        // 若无可用结点则返回
+        if (openList.empty())
         {
             QMessageBox::information(parent, "Notice", "Path not found", QMessageBox::Ok);
-            break;
+            return;
+        }
+
+        // 获取最优结点并移动一步
+        getNearestNode(index);
+
+        // 到达目标结点
+        if (closedList.back() == TNode)
+        {
+            // 生成路径向量
+            generatePath();
+
+            // 拼接路径字符串
+            for (Node item : closedList)
+            {
+                stream << item.id;
+                stream >> node;
+                path += node + " -> ";
+                stream.clear();
+            }
+
+            // 触发路径更新信号
+            emit pathUpdated(QString::fromStdString(path.substr(0, path.length() - 4)));
+
+            return;
         }
     }
 }
 
-/****************************************************
+/*************************************************
  *  @brief 检索当前结点的相邻结点
  *  @param TNode   目标结点
  *  @param index   结点索引
- *  @return
- *      -true   获取成功
- *      -false  获取失败
- ****************************************************/
-bool QGeoMap::getAdjacentNode(int TNode, int &index)
+ *************************************************/
+void QGeoMap::getAdjacentNode(int TNode, int &index)
 {
     float tx = nodeList[TNode]->x;
     float ty = nodeList[TNode]->y;
@@ -258,19 +263,11 @@ bool QGeoMap::getAdjacentNode(int TNode, int &index)
             }
         }
     }
-
-    // 若无可用结点则返回
-    if (openList.empty())
-    {
-        return false;
-    }
-
-    return true;
 }
 
-/****************************************************
+/*************************************************
  *  @brief 获取最优结点并移动一步
- ****************************************************/
+ *************************************************/
 void QGeoMap::getNearestNode(int &index)
 {
     // 获取最优结点
@@ -306,9 +303,9 @@ void QGeoMap::getNearestNode(int &index)
     index++;
 }
 
-/****************************************************
+/*************************************************
  *  @brief 生成路径向量
- ****************************************************/
+ *************************************************/
 void QGeoMap::generatePath()
 {
     vector<QGeoPolyline *> path;

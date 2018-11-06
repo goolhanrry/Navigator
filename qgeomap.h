@@ -38,7 +38,7 @@ public:
   void searchPath(int FNode, int TNode);
 
   vector<QGeoPolyline *> polyline, highlightPolyline;
-  hash_map<int, QGeoPoint *> nodeList;  // 总结点无序列表
+  hash_map<int, QGeoPoint *> nodeList;  // 所有结点无序哈希表
   vector<Node> openList, closedList;    // 相邻结点与已检测结点有序列表
   float maxX, minX, maxY, minY, length; // 地图边界坐标, 路径总长度
 
@@ -46,7 +46,7 @@ protected:
   void switchFile(ifstream *fs, string fileName, int fileIndex);
 
 private:
-  bool getAdjacentNode(int TNode, int &count);
+  void getAdjacentNode(int TNode, int &count);
   void getNearestNode(int &index);
   void generatePath();
 
