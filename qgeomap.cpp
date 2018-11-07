@@ -118,7 +118,7 @@ bool QGeoMap::loadMap(string fileName)
 
         return true;
     }
-    catch (string fileName)
+    catch (string &fileName)
     {
         // 捕获文件读取异常，原因：找不到文件或文件编码错误
         QMessageBox::critical(parent, "Error", "Can't load file \"" + QString::fromStdString(fileName) + "\":\n\nFile Missing or Bad Encoding", QMessageBox::Ok);
@@ -233,8 +233,8 @@ void QGeoMap::getAdjacentNode(int TNode, int &index)
                 continue;
             }
 
-            // F (移动总耗费) = G (从起点到该点的移动量) + 2 * H (从该点到终点的预估移动量, 使用曼哈顿距离估算)
-            float F = length + item->length + 2 * (abs(tx - nodeList[item->TNode]->x) + abs(ty - nodeList[item->TNode]->y));
+            // F (移动总耗费) = G (从起点到该点的移动量) + 2 * H (从该点到终点的预估移动量, 使用直线距离估算)
+            float F = length + item->length + 2 * sqrt(pow(tx - nodeList[item->TNode]->x, 2) + pow(ty - nodeList[item->TNode]->y, 2));
 
             // 若为新结点则加入 openList
             r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->TNode, item->index));
@@ -253,7 +253,7 @@ void QGeoMap::getAdjacentNode(int TNode, int &index)
                 continue;
             }
 
-            float F = length + item->length + 2 * (abs(tx - nodeList[item->FNode]->x) + abs(ty - nodeList[item->FNode]->y));
+            float F = length + item->length + 2 * sqrt(pow(tx - nodeList[item->FNode]->x, 2) + pow(ty - nodeList[item->FNode]->y, 2));
 
             r_iter = find(openList.rbegin(), openList.rend(), pair<int, int>(item->FNode, item->index));
             if (r_iter == openList.rend())
@@ -296,8 +296,6 @@ void QGeoMap::getNearestNode(int &index)
 
     // 沿最小 F 值移动
     openList.erase(min_iter);
-    min_iter = openList.begin();
-
     closedList.push_back(nextNode);
 
     index++;

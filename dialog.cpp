@@ -51,7 +51,7 @@ void Dialog::on_buttonBox_accepted()
     {
         return;
     }
-    else if (!FNode || !TNode || FNode < 1 || TNode > maxNode || FNode < 1 || TNode > maxNode)
+    else if (FNode < 1 || TNode > maxNode || FNode < 1 || TNode > maxNode)
     {
         QMessageBox::critical(this, "Error", "Bad input", QMessageBox::Yes);
         return;
