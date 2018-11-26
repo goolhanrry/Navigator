@@ -8,5 +8,5 @@ install:
   - brew install qt
 
 script:
-  - /usr/local/Cellar/qt/5.11.2/bin/qmake Navigator-plus-plus.pro
+  - /usr/local/Cellar/qt/5.11.2_1/bin/qmake Navigator-plus-plus.pro
   - make
